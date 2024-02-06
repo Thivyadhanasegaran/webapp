@@ -26,3 +26,7 @@ Other API request
 Middleware
 •	checkDBConnection: Middleware to ensure the application has connectivity to the database.
 •	checkPayloadAndQueryParams: Middleware to check if there is any request body with payload and also if there is any query params in the request, if yes it will return —>"400 Bad request" irrespective of whether DB is connected or not.
+
+POST request --> /v1/user
+GET request --> /v1/user/self
+PUT request --> /v1/user/self
