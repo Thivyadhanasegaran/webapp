@@ -9,16 +9,8 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 app.disable("x-powered-by");
 
-app.head("/healthz/*", (req, res, next) => {
-  res
-    .status(405)
-    .header("Cache-Control", "no-cache, no-store, must-revalidate")
-    .header("Pragma", "no-cache")
-    .header("X-Content-Type-Options", "nosniff")
-    .send("Method Not Allowed");
-});
 
-app.get("/healthz/*", (req, res) => {
+app.use("/healthz/*", (req, res) => {
   res
     .status(404)
     .header("Cache-Control", "no-cache, no-store, must-revalidate")
@@ -43,8 +35,10 @@ app.use((req, res, next) => {
   });
 });
 
+
 // Route for User
 app.use("/", userRoute);
+
 
 // Middleware to handle other methods
 app.use("/", (req, res, next) => {
