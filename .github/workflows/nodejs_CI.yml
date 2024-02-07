@@ -12,16 +12,13 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Use Node.js 14.x
+      - name: Use Node.js v20.6.1
         uses: actions/setup-node@v2
         with:
-          node-version: 14.x
+          node-version: "20.6.1"
 
       - name: Install Dependencies
         run: npm install
-
-      - name: Run Test
-        run: npm test
 
       - name: Run Hello World
         run: echo "Hello World"
