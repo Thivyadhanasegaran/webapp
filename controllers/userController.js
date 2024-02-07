@@ -15,24 +15,56 @@ const getUserInfo = async (req, res) => {
 };
 
 // Function to create a new user
-const createUser = async (req, res) => {
+const createUser = async (req, res, next) => {
+  try{
   if (Object.keys(req.query).length > 0) {
     return res.status(400).json({ message: "Query parameters are not allowed" });
   }
-  const { first_name, last_name, password, username } = req.body;
+
+  // Check for empty request body
+  if (Object.keys(req.body).length === 0) {
+    return res.status(400).json({ message: "Empty / Invalid payload not allowed" });
+  }
+
+   // Check if authorization headers are present
+   if (req.headers.authorization) {
+    return res.status(400).json({ message: "Authorization headers are not allowed for creating a user" });
+  }
+
+  const allowedAttributes = ['first_name', 'last_name', 'id', 'password', 'username', 'account_created', 'account_updated'];
+  const receivedAttributes = Object.keys(req.body);
+
+  
+ const { first_name, last_name, password, username } = req.body;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-  try {
     if (!first_name || !last_name || !password || !username) {
       return res.status(400).json({ message: "Missing required fields" });
     }
-    // Check if email matches the email format
+     // Check if email matches the email format
     if (!emailRegex.test(username)) {
       return res.status(400).json({ message: "Invalid email address" });
     }
 
-    // Check if user with the same email already exists
-    const existingUser = await User.findOne({ where: { username } });
+    //  Check for extra attributes
+  const extraAttributes = receivedAttributes.filter(attr => !allowedAttributes.includes(attr));
+  if (extraAttributes.length > 0) {
+    return res.status(400).json({ message: `Extra attributes are not allowed: ${extraAttributes.join(', ')}` });
+  }
+    next();
+  }
+  catch (error) {
+    console.error("Error in createUser middleware:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+
+};
+
+
+const createUserPost = async (req, res) => {
+  const { first_name, last_name, password, username } = req.body;
+
+  const existingUser = await User.findOne({ where: { username } });
     if (existingUser) {
       return res
         .status(400)
@@ -54,11 +86,8 @@ const createUser = async (req, res) => {
       account_created: new Date(),
       account_updated: new Date(),
     });
-  } catch (error) {
-    console.error("Error creating user:", error);
-    res.status(500).json({ message: "Internal Server Error" });
-  }
 };
+
 
 // Function to update user information
 const updateUser = async (req, res) => {
@@ -123,10 +152,9 @@ const updateUser = async (req, res) => {
     });
 
     if (changesMade) {
-      // return res.status(204).send();
-      return res.status(200).json(updatedUser);
+       return res.status(204).send();
     } else {
-      return res.status(204).json({ message: "No changes were made" });
+      return res.status(204).send();
     }
   } catch (error) {
     if (error.name === "SequelizeValidationError") {
@@ -139,4 +167,5 @@ const updateUser = async (req, res) => {
   }
 };
 
-export { createUser, getUserInfo, updateUser };
+
+export { createUser, getUserInfo, updateUser, createUserPost };
