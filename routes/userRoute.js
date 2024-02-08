@@ -14,7 +14,7 @@ router.post("/v1/user", createUser, checkDBConnection, createUserPost);
 router.get("/v1/user/self", checkPayloadAndQueryParams, checkDBConnection, basicAuth, getUserInfo); 
 
 // Route to update user information
-// router.put("/v1/user/self", updateUser, checkDBConnection, basicAuth, updateUserFinal );
+
 
 router.put("/v1/user/self", checkDBConnection, basicAuth, updateUser );
 

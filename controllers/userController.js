@@ -102,6 +102,17 @@ const updateUser = async (req, res) => {
   if (!first_name && !last_name && !password) {
     return res.status(400).json({ message: "Empty / Invalid payload not allowed" });
   }
+
+  const unauthorizedFields = Object.keys(req.body).filter(
+    (field) => !["first_name", "last_name", "password"].includes(field)
+  );
+  if (unauthorizedFields.length > 0) {
+    return res.status(400).json({
+      message: `User cannot update- ${unauthorizedFields.join(
+        ", "
+      )}`,
+    });
+  }
   
   try {
     // Find the user by ID
@@ -115,16 +126,7 @@ const updateUser = async (req, res) => {
         .status(403)
         .json({ message: "User Can only update his/her own account only" });
     }
-    const unauthorizedFields = Object.keys(req.body).filter(
-      (field) => !["first_name", "last_name", "password"].includes(field)
-    );
-    if (unauthorizedFields.length > 0) {
-      return res.status(400).json({
-        message: `User cannot update- ${unauthorizedFields.join(
-          ", "
-        )}`,
-      });
-    }
+    
     let changesMade = false;
 
     if (password !== undefined && password !== user.password) {
