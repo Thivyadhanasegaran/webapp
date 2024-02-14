@@ -23,7 +23,7 @@ Other API request
 •	Method: POST,DELETE,PUT,PATCH
 •	Description: Other API requests are not implemented as per the requirement and will return a "405 Method not allowed" irrespective of whether DB is connected or not.
 
-Middleware
+Middlewares
 •	checkDBConnection: Middleware to ensure the application has connectivity to the database.
 •	checkPayloadAndQueryParams: Middleware to check if there is any request body with payload and also if there is any query params in the request, if yes it will return —>"400 Bad request" irrespective of whether DB is connected or not.
 

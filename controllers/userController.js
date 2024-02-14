@@ -1,8 +1,14 @@
 import { User } from "../models/healthzModel.js";
+import nameValidator from 'validator';
+import emailValidator from 'email-validator';
 
 // Function to get user information
 const getUserInfo = async (req, res) => {
   try {
+    if (req.headers.authorization === undefined) {
+      // res.status(403).send("Authorization header is missing.");
+      res.status(403).json({ message: "Authorization header is missing." });
+    }
     // Retrieve user information (excluding password)
     const user = await User.findByPk(req.user.id, {
       attributes: { exclude: ["password"] },
@@ -34,7 +40,7 @@ const createUser = async (req, res, next) => {
   const allowedAttributes = ['first_name', 'last_name', 'id', 'password', 'username', 'account_created', 'account_updated'];
   const receivedAttributes = Object.keys(req.body);
 
-  
+
  const { first_name, last_name, password, username } = req.body;
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -42,9 +48,11 @@ const createUser = async (req, res, next) => {
       return res.status(400).json({ message: "Missing required fields" });
     }
      // Check if email matches the email format
-    if (!emailRegex.test(username)) {
-      return res.status(400).json({ message: "Invalid email address" });
-    }
+
+  if (!emailValidator.validate(`${req.body.username}`)) {
+    return res.status(400).json({ message: "Invalid email address" });
+    
+}
 
     //  Check for extra attributes
   const extraAttributes = receivedAttributes.filter(attr => !allowedAttributes.includes(attr));
@@ -57,8 +65,8 @@ const createUser = async (req, res, next) => {
     console.error("Error in createUser middleware:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
-
 };
+
 
 
 const createUserPost = async (req, res) => {
@@ -88,19 +96,33 @@ const createUserPost = async (req, res) => {
     });
 };
 
+const isAlphaString = (str) => {
+  return nameValidator.isAlpha(str);
+};
 
-// Function to update user information
-const updateUser = async (req, res) => {
+// Function to check update user information
+
+const updateUserCheck = async (req, res, next) => {
+  try{
   if (Object.keys(req.query).length > 0) {
     return res.status(400).json({ message: "Query parameters are not allowed" });
   }
-  
-  const { first_name, last_name, password } = req.body;
-  const userId = req.user.id;
- 
+  // Check for empty request body
+  if (Object.keys(req.body).length === 0) {
+    return res.status(400).json({ message: "Empty / Invalid payload not allowed" });
+  }
+
+   const { first_name, last_name, password } = req.body;
+   if (
+    !isAlphaString(req.body.first_name) ||
+    !isAlphaString(req.body.last_name)
+) {
+  return res.status(400).json({ message: "Missing required fields" });
+    
+}
   // Check if the request body is empty
   if (!first_name && !last_name && !password) {
-    return res.status(400).json({ message: "Empty / Invalid payload not allowed" });
+    return res.status(400).json({ message: "Missing required fields" });
   }
 
   const unauthorizedFields = Object.keys(req.body).filter(
@@ -113,7 +135,23 @@ const updateUser = async (req, res) => {
       )}`,
     });
   }
+  if (req.headers.authorization === undefined) {
+    return res.status(403).json({ message: "Authorization header is missing." });
+  }
+  next();
+}
+  catch (error) {
+    console.error("Error in createUser middleware:", error);
+    res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+// Function to update user information
+const updateUser = async (req, res) => {
   
+  
+  const { first_name, last_name, password } = req.body;
+  const userId = req.user.id;
+ 
   try {
     // Find the user by ID
     const user = await User.findByPk(userId);
@@ -170,4 +208,4 @@ const updateUser = async (req, res) => {
 };
 
 
-export { createUser, getUserInfo, updateUser, createUserPost };
+export { createUser, getUserInfo, updateUser, createUserPost, updateUserCheck };

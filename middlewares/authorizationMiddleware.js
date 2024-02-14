@@ -5,6 +5,11 @@ import { Buffer } from "buffer";
 // Middleware function for authentication
 const basicAuth = async (req, res, next) => {
   const authHeader = req.headers.authorization;
+
+  if (req.headers.authorization === undefined) {
+    return res.status(403).json({ message: "Authorization header is missing." });
+  }
+  
   if (!authHeader || !authHeader.startsWith("Basic ")) {
     return res.status(401).json({ message: "Unauthorized User" });
   }
