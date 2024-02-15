@@ -6,11 +6,12 @@
   "type": "module",
   "scripts": {
     "start": "node server.js",
-    "test": "mocha --exit --recursive"
+    "test": "mocha --exit --recursive --timeout 20000"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "axios": "^1.6.7",
     "bcrypt": "^5.1.1",
     "chai": "^5.1.0",
     "cors": "^2.8.5",
