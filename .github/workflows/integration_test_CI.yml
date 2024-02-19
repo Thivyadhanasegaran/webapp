@@ -83,7 +83,7 @@ jobs:
  
       - name: Build custom image
         run: packer build packer-config/custom_image.pkr.hcl
-
+#hi
       - name: Packer Build
         uses: hashicorp/packer-github-actions@master
         with:
