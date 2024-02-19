@@ -95,7 +95,19 @@ jobs:
           -var=source_image="custom-image"
           -var=zone="us-east1-b"
           -var=ssh_username="centos"
-          -var=credentials=${{ secrets.GCP_SA_KEY }}
+          -var=credentials={
+            "type": "service_account",
+            "project_id": "ancient-vortex-411817",
+            "private_key_id": "cd7aafc87b02c7b3c3c6d0e9ea76a08d9cf95535",
+            "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC/JyDbT8u17fhI\n7O5vWqucw+F9rg3PZHI10BLw6Fi2LZ6ETZj+CQu6hlwStGej7fOcfolt9cDIGc4Q\nSxUC/1uL8Y/7rh5kt7453ai50CgdOBgdPAO2evgWMoHQ/YbA2BNl6g82NLoR0sxn\nLgDh2J5bPmSqpZGFI7SEIcaWkkxZ8X47Z6L5I7nsBh4GtjH7KdiuvXFPzKrWoxOk\nwAugQu2iiUf8PwOjL3J4pqPV7Zw4rg+igcnF6NOR/cl7D6aq/L6tO5QFa5fp5tuA\nNKMg0CtyGVQNSqgr7tlH8ESR3+2Sd18YjkJnLKPqRTfVGsTEgLmCzA7O4I5uBMtJ\ncoLleQA/AgMBAAECggEAHncw3D4JtHty3MNFCzgIban7OIndnJt159AREhajUOx7\nZ7sVsmNPBxGeqhfZBCkKxdCVvGdJ1vqPO6Hj0ur6XxcHK4XoRTAodYDiVonFDZx2\nR26HFEs2sBRTrrNBignGKbJAw2hq7Cf3OPioM6v6goYICvnsHqv+pifbRqiW2lIF\nM5qYI5nqc5nVRG8hfIV/Vtb+Gi/aNnDEahsEpsh08X/42T4/1bqVNuWIYA5nqX+U\nG/II52/bcUj4NJsbD6kVm2zdtOQtlIHAdh5g6kr4jYlNE3oNnzdTS4od4oPi2bqo\nE4hofF5eF4PfzEbf+/lNgdrNarAscble1q2wLR45jQKBgQD15BZjjNGNQBX5jE6b\n+ebpgHM78yrjjUIpmoiURKiqik/I6Ahkq/aSgnb491EbcqvJdYOf/OXxExGsb6o8\nxZzdydBYKEzof5tnl7D9GYn2KJwF0x961Hz1NAjN+J/0QyrufvGt/lvTSUI/MRcX\nNF6FofKzuPXELoS3SB1NUAlHzQKBgQDHAvEyAPdlauee5dmqLy72gkcpnyqq3pf1\n9V2DoBYJ+TgBTEE3D4IqiOL33ceCyA/N9GgEVx62qYI+Q7jqZeVW5g/6z4poJIvh\nH4+pQ3NZZ6fH6VGTfP5u4A22GibyAu21ma+ACzxn9lk28mboheLLXT6pNDp5OVdB\nyFpdJE9EOwKBgQDUVl0HJomnIppXX1Ra2VkQdz4LnReCXW+vIaWj9A57BumTItxs\noxtQtZ0rrda6jzHNzM8Xj3q5za/LarpltHicBjUGi/auJ9P5h0Ltreo3SiZB2Wkr\n1ub5kC+yPmtSsdYXEkR97lM5h9/PVgMMpMqjN5Cwpp6FBW7SH1I+e0koWQKBgCOi\nhDvW7nWrgdPzBlmx3y/mvgVW6dX0y7MP/3GtPaUFiiC5XcgVL9Kb9kA55xqk5ieT\nxvhX/Tjp+1dY2wilvD4mLeBUP01Mlft2okvFtybgJ6vlPGUzcX+7ANmFr0mQeq4U\n2dcMrAFVnD35g7HJH4YYqTq1Dm9cdCJkVMHu2X63AoGBANFZF+O3Sf667RDRGLVO\nL33l4Vy2SN0HfrIwqoWd0svBQy5bSqF2DMYRDd5tz3jRZa5srmAEFWLlKh8EN9h1\nNilir9z1+2bglOJWkmOMgLiRKD5X0goIACXzzUyUs/1LbU45GHwt9Jlu/8UR5mm9\n/AgxDFPyvEVAk1qYAGkTNY0Q\n-----END PRIVATE KEY-----\n",
+            "client_email": "custom-image@ancient-vortex-411817.iam.gserviceaccount.com",
+            "client_id": "101773829972351671772",
+            "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+            "token_uri": "https://oauth2.googleapis.com/token",
+            "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+            "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/custom-image%40ancient-vortex-411817.iam.gserviceaccount.com",
+            "universe_domain": "googleapis.com"
+          }
          target: packer-config/custom_image.pkr.hcl
         
  
