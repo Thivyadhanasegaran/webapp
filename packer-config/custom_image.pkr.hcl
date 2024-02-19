@@ -39,6 +39,7 @@ source "googlecompute" "custom-image" {
   zone         = var.zone
   ssh_username = var.ssh_username
   image_name   = var.image_name
+  credentials  = var.credentials
 }
  
 build {
