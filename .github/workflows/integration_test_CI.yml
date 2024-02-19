@@ -90,8 +90,7 @@ jobs:
           gcloud auth activate-service-account --key-file=/tmp/gcp_key.json
           # Run any command that requires GCP credentials to verify if it works
           gcloud compute instances list
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: /tmp/gcp_key.json
+       
 
       - name: Packer Build
         uses: hashicorp/packer-github-actions@master
@@ -104,6 +103,8 @@ jobs:
           -var=ssh_username="centos"
           -var=credentials=${{ secrets.GCP_SA_KEY }}
          target: packer-config/custom_image.pkr.hcl
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: /tmp/gcp_key.json
         
         
  
