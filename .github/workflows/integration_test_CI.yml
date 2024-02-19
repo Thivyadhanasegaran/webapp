@@ -82,12 +82,12 @@ jobs:
         run: packer validate packer-config/custom_image.pkr.hcl
  
       
-      - name: Verify GCP service account key
-        run: |
-          echo "${{ secrets.GCP_SA_KEY }}" > /tmp/gcp_key.json
-          gcloud auth activate-service-account --key-file=/tmp/gcp_key.json
-          # Run any command that requires GCP credentials to verify if it works
-          gcloud compute instances list
+      # - name: Verify GCP service account key
+      #   run: |
+      #     echo "${{ secrets.GCP_SA_KEY }}" > /tmp/gcp_key.json
+      #     gcloud auth activate-service-account --key-file=/tmp/gcp_key.json
+      #     # Run any command that requires GCP credentials to verify if it works
+      #     gcloud compute instances list
        
 
       - name: Packer Build
@@ -101,8 +101,8 @@ jobs:
           -var=ssh_username="centos"
           -var=credentials=${{ secrets.GCP_SA_KEY }}
          target: packer-config/custom_image.pkr.hcl
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: /tmp/gcp_key.json
+        # env:
+        #   GOOGLE_APPLICATION_CREDENTIALS: /tmp/gcp_key.json
         
         
  
