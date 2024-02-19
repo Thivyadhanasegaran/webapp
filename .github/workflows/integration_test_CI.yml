@@ -83,8 +83,8 @@ jobs:
  
       - name: Build custom image
         run: packer build packer-config/custom_image.pkr.hcl
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_SA_KEY }}
+        # env:
+        #   GOOGLE_APPLICATION_CREDENTIALS: ${{ secrets.GCP_SA_KEY }}
 
       - name: Packer Build
         uses: hashicorp/packer-github-actions@master
