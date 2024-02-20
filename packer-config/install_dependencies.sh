@@ -18,6 +18,9 @@ sudo dnf module list nodejs
 sudo dnf module enable -y nodejs:20
 sudo dnf install -y npm
 
+sudo yum install zip unzip -y
 
+unzip webapp.zip -d /opt
+sudo chmod -R 755 /opt/webapp
 
 
