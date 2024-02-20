@@ -108,4 +108,4 @@ jobs:
         run: packer validate packer-config/custom_image.pkr.hcl
      
       - name: Build custom image
-        run: packer build packer-config/custom_image.pkr.hcl
+        run: packer build -var 'artifact_path=webapp.zip' packer-config/custom_image.pkr.hcl
