@@ -8,6 +8,8 @@ sudo chmod -R 755 /opt/webapp
 
 # sudo chmod +x server.js
 
+sudo yum install zip unzip -y
+unzip webapp.zip -d /opt
 
 cd /opt/webapp/
 sudo npm install
