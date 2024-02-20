@@ -22,6 +22,6 @@ sudo dnf install -y npm
 sudo yum install zip unzip -y
 unzip webapp.zip -d /opt
 
-cd /opt/webapp/
-sudo npm install
-cd ..
+# cd /opt/webapp/
+# sudo npm install
+# cd ..
