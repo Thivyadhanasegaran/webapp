@@ -24,7 +24,7 @@ sudo yum install zip unzip -y
 # sudo chmod -R 755 /opt/webapp
 
 
-sudo unzip webapp.zip -d /opt
+sudo unzip webapp.zip -d /opt/webapp
 sudo groupadd csye6225
 sudo useradd -r -s /usr/sbin/nologin -g csye6225 csye6225
 
