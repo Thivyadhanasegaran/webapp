@@ -61,6 +61,15 @@ jobs:
       - name: Run Tests
         run: npm test
 
+      - name: Build Artifact
+        run: npm run build
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v2
+        with:
+           name: webapp-artifact
+           path: webapp.zip
+
       - id: 'auth'
         uses: 'google-github-actions/auth@v2'
         with:
