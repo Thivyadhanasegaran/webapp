@@ -104,11 +104,12 @@ jobs:
   
      
         
-      - name: Packer Build
-        uses: hashicorp/packer-github-actions@master
-        with:
-          command: build
+      # - name: Packer Build
+      #   uses: hashicorp/packer-github-actions@master
+      #   with:
+      #     command: build
            
-          target: packer-config/custom_image.pkr.hcl
+      #     target: packer-config/custom_image.pkr.hcl
        
- 
+      - name: Build custom image
+        run: packer build packer-config/custom_image.pkr.hcl
