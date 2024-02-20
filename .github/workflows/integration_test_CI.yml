@@ -70,12 +70,6 @@ jobs:
            name: webapp-artifact
            path: webapp.zip
 
-      - name: Download Artifact  
-        uses: actions/download-artifact@v2  
-        with:   
-            name: webapp-artifact    
-            path: webapp.zip
-
       - id: 'auth'
         uses: 'google-github-actions/auth@v2'
         with:
