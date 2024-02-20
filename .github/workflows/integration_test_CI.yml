@@ -108,11 +108,6 @@ jobs:
         uses: hashicorp/packer-github-actions@master
         with:
           command: build
-          arguments: |
-            -var 'GCP_PROJECT_ID=ancient-vortex-411817'
-            -var 'source_image=custom-image'
-            -var 'zone=us-east1-b'
-            -var 'ssh_username=centos'
            
           target: packer-config/custom_image.pkr.hcl
        
