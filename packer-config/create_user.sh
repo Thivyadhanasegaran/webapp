@@ -1,6 +1,6 @@
 #!/bin/bash
 sudo yum install zip unzip -y
-sudo mkdir -p /opt/csye6225/
+sudo mkdir -p /opt/csye6225/webapp
 sudo mv /tmp/webapp.zip /opt/csye6225/webapp
 
 cd /opt/csye6225/webapp || exit
