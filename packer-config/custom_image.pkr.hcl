@@ -55,9 +55,9 @@ variable "DB_USER" {
 
 
  locals {
-  timestamp = regex_replace(formatdate("YYYY-MM-DD_hh-mm-ss", timestamp()), "[- TZ:]", "")
-}
-
+ timestamp = regex_replace(formatdate("YYYY-MM-DD-hh-mm-ss", timestamp()), "[- TZ:]", "")
+ }
+ 
 source "googlecompute" "custom-image" {
   project_id   = var.GCP_PROJECT_ID
   source_image_family = var.source_image_family
