@@ -73,7 +73,7 @@ build {
  
   provisioner "file" {
     source      = "/home/runner/work/webapp/webapp/webapp.zip"
-    destination = "webapp.zip"
+    destination = "/tmp/"
   }
   provisioner "file" {
     source      = "packer-config/webapp.service"
