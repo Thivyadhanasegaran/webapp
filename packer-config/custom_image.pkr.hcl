@@ -24,7 +24,7 @@ variable "zone" {
  
 variable "ssh_username" {
   type    = string
-  default = "centos"
+  default = "packer"
 }
 
 variable "network" {
