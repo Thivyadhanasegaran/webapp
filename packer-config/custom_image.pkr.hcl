@@ -84,8 +84,8 @@ build {
     script = "packer-config/install_dependencies.sh"
     environment_vars = [
       "DB_USER=${var.DB_USER}",
-      "DB_PASSWORD=${DB_PASSWORD}",
-      "DB=${DB}"
+      "DB_PASSWORD=${var.DB_PASSWORD}",
+      "DB=${var.DB}"
 
     ]
   }
