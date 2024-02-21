@@ -35,7 +35,7 @@ variable "network" {
  
 variable "image_name" {
   type    = string
-  default = "custom-image-${local.timestamp}"
+  default = "custom-image-${locals.timestamp}"
 }
 
 variable "DB_USER" {
