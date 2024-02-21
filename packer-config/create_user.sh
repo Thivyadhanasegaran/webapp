@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-# sudo unzip webapp.zip -d /opt/webapp
+sudo unzip webapp.zip -d /opt/webapp
 sudo groupadd csye6225
 sudo useradd -r -s /usr/sbin/nologin -g csye6225 csye6225
 

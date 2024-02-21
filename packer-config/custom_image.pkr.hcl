@@ -38,17 +38,17 @@ variable "image_name" {
   default = "custom-image"
 }
 
-variable "DB_USER" {
+variable DB_USER {
   type    = string
   default = env("DB_USER")
 }
  
- variable "DB_PASSWORD" {
+ variable DB_PASSWORD {
   type    = string
   default = env("DB_PASSWORD")
 }
  
- variable "DB" {
+ variable DB {
   type    = string
   default = env("DB")
 }
@@ -57,7 +57,7 @@ variable "DB_USER" {
  locals {
  timestamp = regex_replace(formatdate("YYYY-MM-DD-hh-mm-ss", timestamp()), "[- TZ:]", "")
  }
- 
+
 source "googlecompute" "custom-image" {
   project_id   = var.GCP_PROJECT_ID
   source_image_family = var.source_image_family
