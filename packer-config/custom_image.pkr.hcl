@@ -55,7 +55,7 @@ variable "DB_USER" {
 
 
  locals {
-  timestamp = regex_replace(formatdate("YYYY_MM_DD_hh_mm_ss", timestamp()), "[- TZ:]", "")
+  timestamp = regex_replace(formatdate("YYYY-MM-DD_hh-mm-ss", timestamp()), "[- TZ:]", "")
 }
 
 source "googlecompute" "custom-image" {
