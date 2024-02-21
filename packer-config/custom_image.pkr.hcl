@@ -38,17 +38,17 @@ variable "image_name" {
   default = "custom-image"
 }
 
-variable "DB_USER" {
+variable DB_USER {
   type    = string
   default = env("DB_USER")
 }
  
- variable "DB_PASSWORD" {
+ variable DB_PASSWORD {
   type    = string
   default = env("DB_PASSWORD")
 }
  
- variable "DB" {
+ variable DB {
   type    = string
   default = env("DB")
 }
