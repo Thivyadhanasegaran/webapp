@@ -16,7 +16,7 @@ jobs:
  
     steps:
  
-      - name: Install MySQL
+      - name: Start MySQL
         run: |
 
           sudo systemctl start mysql

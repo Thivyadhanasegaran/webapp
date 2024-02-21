@@ -8,9 +8,9 @@ sudo systemctl start mysqld
 sudo systemctl enable mysqld
 
 #Create database and user
-sudo mysql -u root -e "CREATE DATABASE api_db;"
-sudo mysql -u root -e "CREATE USER 'user'@'localhost' IDENTIFIED BY 'Blueblack@12345';"
-sudo mysql -u root -e "GRANT ALL PRIVILEGES ON api_db.* TO 'user'@'localhost';"
+sudo mysql -u root -e "CREATE DATABASE '$DB';"
+sudo mysql -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASSWORD';"
+sudo mysql -u root -e "GRANT ALL PRIVILEGES ON api_db.* TO '$DB_USER'@'localhost';"
 
 
 #Install node dependencies
@@ -25,7 +25,7 @@ sudo groupadd csye6225
 sudo useradd -r -s /usr/sbin/nologin -g csye6225 csye6225
 
 sudo chown -R csye6225:csye6225 /opt/webapp
-sudo chmod -R 755 /opt/webapp
+sudo chmod -R 750 /opt/webapp
 
 
 cd /opt/webapp/

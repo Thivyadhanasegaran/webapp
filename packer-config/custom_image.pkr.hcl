@@ -10,7 +10,7 @@ packer {
  
 variable "GCP_PROJECT_ID" {
   type    = string
-  default = "ancient-vortex-411817"
+  default = "tf-gcp-infra-415001"
 }
  
 variable "source_image_family" {
@@ -35,9 +35,29 @@ variable "network" {
  
 variable "image_name" {
   type    = string
-  default = "custom-image"
+  default = "custom-image-${local.timestamp}"
+}
+
+variable "DB_USER" {
+  type    = string
+  default = env("DB_USER")
 }
  
+ variable "DB_PASSWORD" {
+  type    = string
+  default = env("DB_PASSWORD")
+}
+ 
+ variable "DB" {
+  type    = string
+  default = env("DB")
+}
+
+
+ locals {
+  timestamp = regex_replace(formatdate("YYYY_MM_DD_hh_mm_ss", timestamp()), "[- TZ:]", "")
+}
+
 source "googlecompute" "custom-image" {
   project_id   = var.GCP_PROJECT_ID
   source_image_family = var.source_image_family
@@ -45,6 +65,7 @@ source "googlecompute" "custom-image" {
   network      = var.network
   ssh_username = var.ssh_username
   image_name   = var.image_name
+    
 }
  
 build {
@@ -61,6 +82,12 @@ build {
   }
   provisioner "shell" {
     script = "packer-config/install_dependencies.sh"
+    environment_vars = [
+      "DB_USER=${var.DB_USER}",
+      "DB_PASSWORD=${DB_PASSWORD}",
+      "DB=${DB}"
+
+    ]
   }
   provisioner "shell" {
      script = "packer-config/create_user.sh"
