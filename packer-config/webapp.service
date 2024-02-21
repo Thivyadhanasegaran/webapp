@@ -1,5 +1,6 @@
 [Unit]
 Description=My webapp
+ConditionPathExists=/opt/application.properties
 After=network.target
 
 [Service]

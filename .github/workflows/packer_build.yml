@@ -2,12 +2,14 @@ name: Workfloww CI
  
 on:
   pull_request:
+    types: [closed]
     branches:
       - main
 
 jobs:
   build:
     name: test-build
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     env:
       DB: ${{ secrets.DB }}
@@ -91,4 +93,7 @@ jobs:
         run: packer init packer-config/custom_image.pkr.hcl
 
       - name: Build custom image
-        run: packer build packer-config/custom_image.pkr.hcl
+        run:  packer build -var 'project_id=${{ secrets.GCP_PROJECT_ID }}'  packer-config/custom_image.pkr.hcl
+
+
+       
