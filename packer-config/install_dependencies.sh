@@ -17,6 +17,7 @@ sudo mysql -u root -e "GRANT ALL PRIVILEGES ON $DB.* TO '$DB_USER'@'localhost';"
 sudo dnf module list nodejs
 sudo dnf module enable -y nodejs:20
 sudo dnf install -y npm
+sudo yum install zip unzip -y
 
 
 
