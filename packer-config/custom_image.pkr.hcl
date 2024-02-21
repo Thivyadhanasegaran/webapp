@@ -8,7 +8,7 @@ packer {
   }
 }
  
-variable "GCP_PROJECT_ID" {
+variable "project_id" {
   type    = string
 }
  
