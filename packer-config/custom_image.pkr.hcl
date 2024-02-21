@@ -58,7 +58,7 @@ variable DB_USER {
  }
 
 source "googlecompute" "custom-image" {
-  project_id   = var.GCP_PROJECT_ID
+  project_id   = var.project_id
   source_image_family = var.source_image_family
   zone         = var.zone
   network      = var.network
