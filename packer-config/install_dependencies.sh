@@ -7,9 +7,10 @@ sudo systemctl start mysqld
 sudo systemctl enable mysqld
 
 #Create database and user
-sudo mysql -u root -e "CREATE DATABASE '$DB';"
+sudo mysql -u root -e "CREATE DATABASE $DB;"
 sudo mysql -u root -e "CREATE USER '$DB_USER'@'localhost' IDENTIFIED BY '$DB_PASSWORD';"
-sudo mysql -u root -e "GRANT ALL PRIVILEGES ON api_db.* TO '$DB_USER'@'localhost';"
+sudo mysql -u root -e "GRANT ALL PRIVILEGES ON $DB.* TO '$DB_USER'@'localhost';"
+
 
 
 #Install node dependencies
