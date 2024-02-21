@@ -35,7 +35,7 @@ variable "network" {
  
 variable "image_name" {
   type    = string
-  default = "custom-image-${locals.timestamp}"
+  default = "custom-image"
 }
 
 variable "DB_USER" {
@@ -63,8 +63,8 @@ source "googlecompute" "custom-image" {
   source_image_family = var.source_image_family
   zone         = var.zone
   network      = var.network
-  ssh_username = var.ssh_username
-  image_name   = var.image_name
+  ssh_username = var.ssh_username  
+  image_name   = "${var.image_name}-${locals.timestamp}"
     
 }
  
