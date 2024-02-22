@@ -97,4 +97,16 @@ These secrets are used to create and configure the MySQL database during workflo
 
 The workflow ensures that the application interacts correctly with the MySQL database and that the "/v1/user" endpoint behaves as expected according to the specified test cases.
 
-
+## Assignment 04:
+ 
+1. Custom image is built from the centos 8 stream and it is setup to be in run in our default VPC by default.
+2. Custom image consists of dependencies like mysql, node and creation of user and group based on given requirements (user:csye6225, group:csye6225)
+3. The webapp services is automatically started using systemd file webapp.service.
+4. To deploy the custom image in GCP service account with the following roles were enabled
+       1) Compute Engine Instance Admin (v1)
+       2) Service Account User.
+    Service Account -> keys -> Json-> file gets downloaded.
+    The JSON key is stored as secret in organisation webapp repo.
+5. Two workflows have been built, namely test-build and test-checker
+6. The test-checker consists of integration tests, build project artifacts, packer init, packer fmt and packer validate.
+7. The test-validator consists of intergration tests, build project artifacts, authentication, packer init, packer build and custom image gets build on merge.
