@@ -1,5 +1,5 @@
 Cloud-Native Application README:
-•	Programming Language: Node.js
+•	Programming Language: Node.js..
 •	Relational Database: MySQL
 •	Backend Framework: Express.js
 •	ORM Framework: Sequelize
