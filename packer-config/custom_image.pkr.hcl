@@ -37,7 +37,7 @@ variable "image_name" {
 }
 
 
- locals {
+locals {
  timestamp = regex_replace(formatdate("YYYY-MM-DD-hh-mm-ss", timestamp()), "[- TZ:]", "")
  }
 

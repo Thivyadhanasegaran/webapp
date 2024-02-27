@@ -83,9 +83,8 @@ jobs:
         run: packer fmt -check packer-config/custom_image.pkr.hcl
 
       - name: Validate Packer template
-        run: packer validate -var 'project_id=${{ secrets.GCP_PROJECT_ID }}' packer-config/custom_image.pkr.hcl   
-
-
+        run: packer validate -var 'project_id=${{ secrets.GCP_PROJECT_ID }}' packer-config/custom_image.pkr.hcl
+      
 
 
      
