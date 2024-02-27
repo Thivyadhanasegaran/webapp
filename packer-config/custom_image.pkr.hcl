@@ -71,7 +71,7 @@ build {
      script = "packer-config/create_user.sh"
   }
 
-   provisioner "shell" {
+  provisioner "shell" {
      script = "packer-config/configure_systemd.sh"
   } 
 }
