@@ -3,22 +3,17 @@ import { expect } from "chai";
 
 axios.defaults.baseURL = "http://localhost:8080";
 
-describe("User Endpoint Integration Tests", () => {
-  it("should create an account and validate its existence with GET", async () => {
+describe("Endpoint Integration Tests", () => {
+  it("Create a user account and verify its existence using a GET request", async () => {
     // POST request to create a new user
-    const createUserResponse = await axios.post("/v1/user", {
-      first_name: "test",
-      last_name: "test",
-      username: "test@gmail.com",
-      password: "test",
+    const userCreationResponse = await axios.post("/v1/user", {
+      first_name: "user",last_name: "user",username: "user@gmail.com",password: "user01",
     });
-    expect(createUserResponse.status).to.equal(201);
-    const userId = createUserResponse.data.id;
-    // Authenticate
-    const authHeader = `Basic ${Buffer.from(
-      "test@gmail.com:test"
-    ).toString("base64")}`;
-    // Send a GET request
+    expect(userCreationResponse.status).to.equal(201);
+    const userId = userCreationResponse.data.id;
+    // Authenticate the user
+    const authHeader = `Basic ${Buffer.from("user@gmail.com:user01").toString("base64")}`;
+    // Send a GET request to verify the existence of the user account
     const getUserResponse = await axios.get("/v1/user/self", {
       headers: {
         Authorization: authHeader,
@@ -28,16 +23,12 @@ describe("User Endpoint Integration Tests", () => {
     expect(getUserResponse.data.id).to.equal(userId);
   });
 
-  it("should update an account and validate the changes with GET", async () => {
+  it("Update an existing account and validate the changes with GET", async () => {
     // Authenticate
-    const authHeader = `Basic ${Buffer.from(
-      "test@gmail.com:test"
-    ).toString("base64")}`;
+    const authHeader = `Basic ${Buffer.from("user@gmail.com:user01").toString("base64")}`;
     // Send a PUT request
     const updateUserResponse = await axios.put("/v1/user/self", {
-      first_name: 'testnew',
-      last_name: 'testnew',
-      password: 'test'
+      first_name: 'usernew',last_name: 'usernew',password: 'user01'
     }, {
       headers: {
         Authorization: authHeader,
@@ -51,6 +42,6 @@ describe("User Endpoint Integration Tests", () => {
       },
     });
     expect(getUserResponse.status).to.equal(200);
-    expect(getUserResponse.data.first_name).to.equal("testnew");
+    expect(getUserResponse.data.first_name).to.equal("usernew");
   });
 });

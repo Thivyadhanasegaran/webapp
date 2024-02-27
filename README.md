@@ -1,5 +1,5 @@
 Cloud-Native Application README:
-•	Programming Language: Node.js..
+•	Programming Language: Node.js
 •	Relational Database: MySQL
 •	Backend Framework: Express.js
 •	ORM Framework: Sequelize
@@ -99,14 +99,13 @@ The workflow ensures that the application interacts correctly with the MySQL dat
 
 ## Assignment 04:
  
-1. Custom image is built from the centos 8 stream and it is setup to be in run in our default VPC by default.
-2. Custom image consists of dependencies like mysql, node and creation of user and group based on given requirements (user:csye6225, group:csye6225)
-3. The webapp services is automatically started using systemd file webapp.service.
-4. To deploy the custom image in GCP service account with the following roles were enabled
-       1) Compute Engine Instance Admin (v1)
-       2) Service Account User.
-    Service Account -> keys -> Json-> file gets downloaded.
-    The JSON key is stored as secret in organisation webapp repo.
-5. Two workflows have been built, namely test-build and test-checker
-6. The test-checker consists of integration tests, build project artifacts, packer init, packer fmt and packer validate.
-7. The test-validator consists of intergration tests, build project artifacts, authentication, packer init, packer build and custom image gets build on merge.
+• A custom image will be created from CentOS 8 Stream and it is configured to run in the default VPC.
+• This image includes dependencies such as MySQL and Node.js, along with the creation of specific user and group profiles based on given requirements  (user: csye6225, group: csye6225).
+• The web application service is set to automatically start using a systemd file named webapp.service.
+• Deployment of the custom image to a GCP service account requires following specific roles to be enabled
+1. Compute Engine Instance Admin (v1)
+2. Service Account User
+A JSON key is downloaded from the Service Account and it is stored securely as a secret in the organization's web application repository.
+• Two workflows have been developed: test-build and test-checker.
+• Test-checker workflow includes integration tests, building project artifacts, Packer initialization, formatting, and validation commands.
+• Test-validator workflow also contains integration tests and builds project artifacts. Additionally, it includes authentication, Packer initialization, Packer building, and the creation of a custom image upon merge.

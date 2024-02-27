@@ -40,13 +40,13 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
     
-      - name: Set up environment variables
-        run: |         
-          echo "DB_USER=${{ secrets.DB_USER}}" > .env
-          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
-          echo "DB=${{ secrets.DB }}" >> .env
-          echo "HOST=${{ secrets.HOST }}" >> .env
-          echo "DIALECT=${{ secrets.DIALECT }}" >> .env
+      # - name: Set up environment variables
+      #   run: |         
+      #     echo "DB_USER=${{ secrets.DB_USER}}" > .env
+      #     echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+      #     echo "DB=${{ secrets.DB }}" >> .env
+      #     echo "HOST=${{ secrets.HOST }}" >> .env
+      #     echo "DIALECT=${{ secrets.DIALECT }}" >> .env
 
       - name: Install Dependencies
         run: npm install
@@ -80,7 +80,7 @@ jobs:
         run: packer init packer-config/custom_image.pkr.hcl
 
       - name: Format Packer template
-        run: packer fmt packer-config/custom_image.pkr.hcl
+        run: packer fmt -check packer-config/custom_image.pkr.hcl
 
       - name: Validate Packer template
         run: packer validate -var 'project_id=${{ secrets.GCP_PROJECT_ID }}' packer-config/custom_image.pkr.hcl   

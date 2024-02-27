@@ -42,13 +42,13 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
     
-      - name: Set up environment variables
-        run: |         
-          echo "DB_USER=${{ secrets.DB_USER}}" > .env
-          echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
-          echo "DB=${{ secrets.DB }}" >> .env
-          echo "HOST=${{ secrets.HOST }}" >> .env
-          echo "DIALECT=${{ secrets.DIALECT }}" >> .env
+      # - name: Set up environment variables
+      #   run: |         
+      #     echo "DB_USER=${{ secrets.DB_USER}}" > .env
+      #     echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
+      #     echo "DB=${{ secrets.DB }}" >> .env
+      #     echo "HOST=${{ secrets.HOST }}" >> .env
+      #     echo "DIALECT=${{ secrets.DIALECT }}" >> .env
 
       - name: Install Dependencies
         run: npm install

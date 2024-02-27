@@ -49,9 +49,10 @@ app.use("/healthz", (req, res, next) => {
 app.use('/healthz', handlePayload);
 
 // Middleware to handle invalid payloads for GET requests
+const parser = bodyParser.json();
 app.use("/healthz", (req, res, next) => {
   if (req.method === "GET") {
-    bodyParser.json()(req, res, (error) => {
+    parser(req, res, (error) => {
       if (error) {
         res
           .status(400)
@@ -72,37 +73,42 @@ app.use("/healthz", (req, res, next) => {
 app.get("/healthz", healthzRoute);
 
 // Middleware to handle invalid methods for non-existent endpoints
+
+const allowedEndpoints = {
+  '/v1/user': ['POST'],
+  '/v1/user/self': ['GET', 'PUT']
+};
+
 app.use((req, res, next) => {
-  const allowedPaths = ['/v1/user', '/v1/user/self'];
-  const allowedMethods = {
-      '/v1/user': ['POST'],
-      '/v1/user/self': ['GET', 'PUT']
-  };
- 
-  if (allowedPaths.includes(req.path)) {
-      if (!allowedMethods[req.path].includes(req.method)) {
-          res.status(405).send();
-      } else {
-          next();
-      }
+  const { path, method } = req;
+  
+  if (allowedEndpoints[path]) {
+    if (!allowedEndpoints[path].includes(method)) {
+      res.status(405).send();
+    } else {
+      next();
+    }
   } else {
-      res.status(404).send();
+    res.status(404).send();
   }
 });
+
 
 app.use(bodyParser.json());
 
 app.use("/", userRoute);
 
 app.use((error, req, res, next) => {
-  if (error instanceof SyntaxError && error.status === 400 && 'body' in error) {
-      
-      res.status(400).json({ error: 'Invalid JSON in request body' });
+  const syntaxError = error instanceof SyntaxError;
+  const errorStatus = error.status === 400;
+  const hasBody = 'body' in error;
+
+  if (syntaxError && errorStatus && hasBody) {
+    res.status(400).json({ error: 'Invalid JSON in request body' });
   } else {
-      next(error);
+    next(error);
   }
 });
-
 
 sequelize.sync().then(() => {
   // Start the server after syncing
