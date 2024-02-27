@@ -10,7 +10,7 @@ Group=csye6225
 WorkingDirectory = /opt/webapp
 
 
-ExecStartPre=/bin/bash -c 'until [ -f /opt/webapp/.env ]; do sleep 1; done'
+
 
 
 
