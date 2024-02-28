@@ -105,7 +105,7 @@ The workflow ensures that the application interacts correctly with the MySQL dat
 • The web application service is set to automatically start using a systemd file named webapp.service.
 • Deployment of the custom image to a GCP service account requires following specific roles to be enabled
 1. Compute Engine Instance Admin (v1)
-2. Service Account User
+2. Service Account User.
 A JSON key is downloaded from the Service Account and it is stored securely as a secret in the organization's web application repository.
 • Two workflows have been developed: test-build and test-checker.
 • Test-checker workflow includes integration tests, building project artifacts, Packer initialization, formatting, and validation commands.
