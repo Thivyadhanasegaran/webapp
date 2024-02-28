@@ -104,7 +104,7 @@ The workflow ensures that the application interacts correctly with the MySQL dat
 • This image includes dependencies such as MySQL and Node.js, along with the creation of specific user and group profiles based on given requirements  (user: csye6225, group: csye6225).
 • The web application service is set to automatically start using a systemd file named webapp.service.
 • Deployment of the custom image to a GCP service account requires following specific roles to be enabled
-1. Compute Engine Instance Admin (v1)
+1. Compute Engine Instance Admin (v1).
 2. Service Account User.
 A JSON key is downloaded from the Service Account and it is stored securely as a secret in the organization's web application repository.
 • Two workflows have been developed: test-build and test-checker.
