@@ -1,5 +1,6 @@
 [Unit]
 Description=My webapp
+ConditionPathExists=/opt/webapp/.env
 After=network.target
 
 [Service]
@@ -8,13 +9,6 @@ Type=simple
 User=csye6225
 Group=csye6225
 WorkingDirectory = /opt/webapp
-
-
-
-
-
-
-
 ExecStart= /usr/bin/node /opt/webapp/server.js 
 Restart=always
 RestartSec=3

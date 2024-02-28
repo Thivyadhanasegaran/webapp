@@ -1,3 +1,4 @@
+## Assignment 01:
 Cloud-Native Application README:
 •	Programming Language: Node.js
 •	Relational Database: MySQL
@@ -27,7 +28,7 @@ Middlewares
 •	checkDBConnection: Middleware to ensure the application has connectivity to the database.
 •	checkPayloadAndQueryParams: Middleware to check if there is any request body with payload and also if there is any query params in the request, if yes it will return —>"400 Bad request" irrespective of whether DB is connected or not.
 
-Assignment 02:
+## Assignment 02:
 
 POST request --> /v1/user
 
@@ -57,7 +58,7 @@ PUT request --> /v1/user/self
 • No DB connection -->503
 • Account_updated field should be updated when the user update is successful.
 
-Assignment 03:
+## Assignment 03:
 
 GitHub Actions Integration Tests Workflow:
 
@@ -109,3 +110,7 @@ A JSON key is downloaded from the Service Account and it is stored securely as a
 • Two workflows have been developed: test-build and test-checker.
 • Test-checker workflow includes integration tests, building project artifacts, Packer initialization, formatting, and validation commands.
 • Test-validator workflow also contains integration tests and builds project artifacts. Additionally, it includes authentication, Packer initialization, Packer building, and the creation of a custom image upon merge.
+
+## Assignment 05:
+• Packer template has been updated to remove mysql installation step in install_dependencies shell script.
+• DB configuration and user creation are achieved through terraform code.
