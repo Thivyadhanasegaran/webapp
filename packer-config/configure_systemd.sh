@@ -13,5 +13,5 @@ sudo chmod -R 750 /opt/webapp
 sudo systemctl daemon-reload
 sudo systemctl enable webapp
 sudo systemctl start webapp
-sudo systemctl restart webapp
+
 
