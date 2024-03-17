@@ -1,11 +1,14 @@
 import { User } from "../models/healthzModel.js";
 import nameValidator from "validator";
 import emailValidator from "email-validator";
+import logger from "../logger/logger.js";
+
 
 // Function to get user information
 const getUserInfo = async (req, res) => {
   try {
     if (req.headers.authorization === undefined) {
+      logger.error("Authorization header is missing.");
       // res.status(403).send("Authorization header is missing.");
       res.status(403).json({ message: "Authorization header is missing." });
     }
@@ -15,6 +18,7 @@ const getUserInfo = async (req, res) => {
     });
     res.json(user);
   } catch (error) {
+    logger.error("Error retrieving user information:", error);
     console.error("Error retrieving user information:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
@@ -38,6 +42,7 @@ const createUser = async (req, res, next) => {
 
     // Check if authorization headers are present
     if (req.headers.authorization) {
+      logger.error("Authorization headers are not allowed for creating a user");
       return res
         .status(400)
         .json({
@@ -101,6 +106,7 @@ const createUserPost = async (req, res) => {
 
   const existingUser = await User.findOne({ where: { username } });
   if (existingUser) {
+    logger.info("User with this email already exists");
     return res
       .status(400)
       .json({ message: "User with this email already exists" });
@@ -174,12 +180,14 @@ const updateUserCheck = async (req, res, next) => {
   }
   
     if (req.headers.authorization === undefined) {
+      logger.error("Authorization header is missing.");
       return res
         .status(403)
         .json({ message: "Authorization header is missing." });
     }
     next();
   } catch (error) {
+    logger.error("Error in updateUserCheck middleware:", error);
     console.error("Error in createUser middleware:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
@@ -193,6 +201,7 @@ const updateUser = async (req, res) => {
     // Find the user by ID
     const user = await User.findByPk(userId);
     if (!user) {
+      logger.error("User not found");
       return res.status(404).json({ message: "User not found" });
     }
     // Check if the user is updating their own account
@@ -229,6 +238,7 @@ const updateUser = async (req, res) => {
     });
 
     if (changesMade) {
+      logger.info("User updated successfully");
       return res.status(204).send();
     } else {
       return res.status(204).send();
@@ -238,6 +248,7 @@ const updateUser = async (req, res) => {
       const errorMessage = error.errors.map((err) => err.message).join(", ");
       return res.status(400).json({ message: errorMessage });
     } else {
+      logger.error("Error updating user:", error);
       console.error("Error updating user:", error);
       return res.status(500).json({ message: "Internal Server Error" });
     }

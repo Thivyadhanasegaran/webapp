@@ -1,3 +1,6 @@
+import logger from "../logger/logger.js";
+
+
 // Function to check for any payload or query parameters in the request
 
 const checkPayloadAndQueryParams = (req, res, next) => {

@@ -72,4 +72,24 @@ build {
   provisioner "shell" {
     script = "packer-config/configure_systemd.sh"
   }
+  # Install Ops Agent
+  provisioner "shell" {
+    inline = [
+      "curl -sSO https://storage.googleapis.com/gcp-cloud-ops-artifacts/logging/google-cloud-ops-agent-install.sh",
+      "sudo bash google-cloud-ops-agent-install.sh",
+    ]
+  }
+
+  # Configure Ops Agent for application logs
+  provisioner "file" {
+    source      = "packer-config/ops-agent-config.yaml"  
+    destination = "/etc/google-cloud-ops-agent/config.yaml"
+  }
+
+  # Restart Ops Agent service to apply configuration
+  provisioner "shell" {
+    inline = [
+      "sudo systemctl restart google-cloud-ops-agent",
+    ]
+  }
 }
