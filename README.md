@@ -12,7 +12,7 @@ npm start —> to start the server
 
 Health Check (/healthz)
 •	Checks if the application has connectivity to the database..
-•	Returns HTTP "200 OK" —> if the connection is successful.
+•	Returns HTTP "200 OK" —> if the connection is successful..
 •	Returns HTTP "503 Service Unavailable" —> if the connection is unsuccessful.
 
 Method: GET
