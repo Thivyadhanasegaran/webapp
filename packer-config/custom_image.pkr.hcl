@@ -69,11 +69,9 @@ build {
   provisioner "shell" {
     script = "packer-config/create_user.sh"
   }
-  
-
-
-
-
+  provisioner "shell" {
+    script = "packer-config/configure_systemd.sh"
+  }
   # Install Ops Agent
   provisioner "shell" {
     inline = [
@@ -91,11 +89,7 @@ build {
   provisioner "shell" {
     inline = [
       "sudo mv /tmp/ops-agent-config.yaml /etc/google-cloud-ops-agent/config.yaml",
-      "sudo systemctl restart google-cloud-ops-agent",
     ]
-  }
-  provisioner "shell" {
-    script = "packer-config/configure_systemd.sh"
   }
 }
 
