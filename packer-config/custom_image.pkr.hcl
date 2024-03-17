@@ -88,9 +88,7 @@ build {
   # Restart Ops Agent service to apply configuration
   provisioner "shell" {
     inline = [
-      "sudo mv /tmp/ops-agent-config.yaml /etc/google-cloud-ops-agent/config.yaml",
-      "sudo systemctl status google-cloud-ops-agent",
-      "sudo systemctl restart google-cloud-ops-agent",
+      "sudo mv /tmp/ops-agent-config.yaml /etc/google-cloud-ops-agent/config.yaml",     
     ]
   }
 }
