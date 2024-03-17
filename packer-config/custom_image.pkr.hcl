@@ -78,6 +78,7 @@ build {
       "curl -sSO https://dl.google.com/cloudagents/add-google-cloud-ops-agent-repo.sh",
       "sudo bash add-google-cloud-ops-agent-repo.sh",
       "sudo mkdir -p /etc/google-cloud-ops-agent/",
+      "sudo mkdir -p /var/log/webapp/"
     ]
   }
   # Configure Ops Agent for application logs
@@ -89,6 +90,7 @@ build {
   provisioner "shell" {
     inline = [
       "sudo mv /tmp/ops-agent-config.yaml /etc/google-cloud-ops-agent/config.yaml",
+      "sudo systemctl restart google-cloud-ops-agent",
     ]
   }
 }
