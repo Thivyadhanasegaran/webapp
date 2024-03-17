@@ -4,7 +4,7 @@ import logger from "../logger/logger.js";
 
 const healthzCheck = async (req, res) => {
   try {
-    logger.info("Health check endpoint accessed");
+     logger.info("Healthz endpoint accessed");
     res
       .status(200)
       .header("Cache-Control", "no-cache, no-store, must-revalidate")

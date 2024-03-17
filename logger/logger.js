@@ -8,7 +8,7 @@ const logger = winston.createLogger({
   ),
   transports: [
     new winston.transports.Console(),
-    new winston.transports.File({ filename: 'app.log' })
+    new winston.transports.File({ filename: '/var/log/app.log' })
   ]
 });
 
@@ -22,21 +22,5 @@ export default logger;
 
 
 
-// import { Logger } from 'node-json-logger';
 
-// // Create a new instance of the Logger class 
-// const logger = new Logger({
-//   timestampFormat: 'YYYY-MM-DDTHH:mm:ss.SSSZ', 
-//   logLevel: 'info', 
-//   logFilePath: '/var/log/myapp.log', 
-//   includeErrorStackTrace: true, 
-//   appName: 'MyWebApp'
-// });
-
-// // Log messages
-// logger.info('This is an informational message.');
-// logger.warn('This is a warning message.');
-// logger.error('This is an error message.');
-
-// export default logger;
 
