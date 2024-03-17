@@ -79,13 +79,11 @@ build {
       "sudo bash google-cloud-ops-agent-install.sh",
     ]
   }
-
   # Configure Ops Agent for application logs
   provisioner "file" {
-    source      = "packer-config/ops-agent-config.yaml"  
+    source      = "packer-config/ops-agent-config.yaml"
     destination = "/etc/google-cloud-ops-agent/config.yaml"
   }
-
   # Restart Ops Agent service to apply configuration
   provisioner "shell" {
     inline = [
