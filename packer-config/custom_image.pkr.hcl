@@ -75,8 +75,8 @@ build {
   # Install Ops Agent
   provisioner "shell" {
     inline = [
-      "curl -sSO https://storage.googleapis.com/gcp-cloud-ops-artifacts/logging/google-cloud-ops-agent-install.sh",
-      "sudo bash google-cloud-ops-agent-install.sh",
+      "curl -sSO https://dl.google.com/cloudagents/add-google-cloud-ops-agent-repo.sh",
+      "sudo bash add-google-cloud-ops-agent-repo.sh".
     ]
   }
   # Configure Ops Agent for application logs
