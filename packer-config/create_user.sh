@@ -16,5 +16,5 @@ sudo chmod -R 750 /opt/webapp
 sudo mkdir -p /var/log/webapp/
 
 sudo chown -R csye6225:csye6225 /var/log/webapp/
-sudo chmod -R 777 /var/log/webapp/
+sudo chmod -R 755 /var/log/webapp/
 
