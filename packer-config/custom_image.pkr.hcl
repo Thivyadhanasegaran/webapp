@@ -90,6 +90,10 @@ build {
   provisioner "shell" {
     inline = [
       "sudo mv /tmp/ops-agent-config.yaml /etc/google-cloud-ops-agent/config.yaml",
+    ]
+  }
+  provisioner "shell" {
+    inline = [
       "sudo systemctl restart google-cloud-ops-agent",
     ]
   }
