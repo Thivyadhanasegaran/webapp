@@ -1,4 +1,6 @@
 import winston from 'winston';
+import dotenv from "dotenv";
+dotenv.config();
 
 const logger = winston.createLogger({
   level: 'info',
@@ -8,7 +10,7 @@ const logger = winston.createLogger({
   ),
   transports: [
     new winston.transports.Console(),
-    new winston.transports.File({ filename: '/var/log/webapp/app.log' })
+    new winston.transports.File({ filename: process.env.LOGPATH??'./log/app.log'})
 
   ]
 });
