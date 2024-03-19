@@ -82,7 +82,9 @@ const logger = winston.createLogger({
   levels: customLevels.levels, // Custom severity levels
   format: winston.format.combine(
     winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }), // Customizing timestamp format
-    winston.format.printf(info => JSON.stringify({ level: info.level, time: info.timestamp, message: info.message })) // Customizing log message format to JSON
+    // winston.format.printf(info => JSON.stringify({ level: info.level, time: info.timestamp, message: info.message })) // Customizing log message format to JSON
+    winston.format.printf(info => JSON.stringify({ message: info.message, time: info.timestamp })) // Customizing log message format to include only message and time
+
   ),
   transports: [
     new winston.transports.Console(),
