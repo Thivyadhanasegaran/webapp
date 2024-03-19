@@ -18,5 +18,3 @@ sudo mkdir -p /var/log/webapp/
 sudo chown -R csye6225:csye6225 /var/log/webapp/
 sudo chmod -R 744 /var/log/webapp/
 
-# sudo chown -R csye6225:csye6225 /var/log/
-# sudo chmod -R 750 /var/log/
