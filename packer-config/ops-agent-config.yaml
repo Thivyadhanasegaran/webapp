@@ -17,6 +17,29 @@
 #         processors: [my-app-processor]
 
 
+# logging:
+#   receivers:
+#     my-app-receiver:
+#       type: files
+#       include_paths:
+#         - /var/log/webapp/app.log
+#       record_log_file_path: true
+#   processors:
+#     my-app-processor:
+#       type: parse_json
+#       time_key: time
+#       time_format: "YYYY-MM-DDTHH:mm:ss.SSSZ"
+#     move_severity:
+#       type: modify_fields
+#       fields:
+#         severity:
+#           move_from: jsonPayload.severity
+#   service:
+#     pipelines:
+#       default_pipeline:
+#         receivers: [my-app-receiver]
+#         processors: [my-app-processor, move_severity]
+
 logging:
   receivers:
     my-app-receiver:
@@ -26,9 +49,11 @@ logging:
       record_log_file_path: true
   processors:
     my-app-processor:
-      type: parse_json
+      type: parse_regex
+      field: message
+      regex: "^(?<time>\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{3}Z)\\s*(?<severity>[^ ]*)\\s*(?<file>[^ :]*):(?<line>\\d*)\\s*-\\s*(?<message>.*)$"
       time_key: time
-      time_format: "YYYY-MM-DDTHH:mm:ss.SSSZ"
+      time_format: "YYYY-MM-DD HH:mm:ss"
     move_severity:
       type: modify_fields
       fields:
@@ -39,4 +64,3 @@ logging:
       default_pipeline:
         receivers: [my-app-receiver]
         processors: [my-app-processor, move_severity]
-
