@@ -90,7 +90,6 @@ const logger = winston.createLogger({
   ]
 });
 
-logger.log('info', 'This is an informational message.');
 
 
 export default logger;
