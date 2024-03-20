@@ -80,12 +80,10 @@ build {
       "sudo mkdir -p /etc/google-cloud-ops-agent/",
     ]
   }
-  # Configure Ops Agent for application logs
   provisioner "file" {
     source      = "packer-config/ops-agent-config.yaml"
     destination = "/tmp/ops-agent-config.yaml"
   }
-  # Restart Ops Agent service to apply configuration
   provisioner "shell" {
     inline = [
       "sudo mv /tmp/ops-agent-config.yaml /etc/google-cloud-ops-agent/config.yaml",

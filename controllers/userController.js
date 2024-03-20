@@ -77,6 +77,7 @@ const createUser = async (req, res, next) => {
     // Check if email matches the email format
 
     if (!emailValidator.validate(`${req.body.username}`)) {
+      logger.debug("Invalid email address:", req.body.username);
       return res.status(400).json({ message: "Invalid email address" });
     }
 
@@ -117,9 +118,9 @@ const createUserPost = async (req, res) => {
     username,
   });
 
-  // Return the created user
+  
   logger.info("New user created successfully", { username: req.body.username });
-
+  // Return the created user
   res.status(201).json({
     id: newUser.id,
     first_name: newUser.first_name,

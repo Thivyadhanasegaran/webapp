@@ -114,3 +114,18 @@ A JSON key is downloaded from the Service Account and it is stored securely as a
 ## Assignment 05:
 • Packer template has been updated to remove mysql installation step in install_dependencies shell script.
 • DB configuration and user creation are achieved through terraform code.
+
+
+## Assignment 06:
+• Updated the Packer template to include installation and configuration of the Ops Agent.
+• Utilized a provisioner to install the Ops Agent by executing the provided installation script.
+• Configured the Ops Agent to streamline application logs to Google Cloud Observability.
+
+Ops Agent Configuration:
+• Modified the ops-agent-config.yaml file to specify the logging configuration for application logs.
+• Ensured that the configuration correctly specifies the paths to application logs and their format (JSON).
+• Updated the logging configuration in the web application code to write logs in structured JSON format.
+• Utilized libraries like Winston to format logs in JSON and ensure compatibility with Google Cloud Observability.
+• Adjusted logging statements within the application code to generate structured logs.
+• Ensured that logs include necessary context and are appropriately categorized by severity.
+
