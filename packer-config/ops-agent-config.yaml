@@ -1,45 +1,3 @@
-# logging:
-#   receivers:
-#     my-app-receiver:
-#       type: files
-#       include_paths:
-#         - /var/log/webapp/app.log
-#       record_log_file_path: true
-#   processors:
-#     my-app-processor:
-#       type: parse_json
-#       time_key: time
-#       time_format: "YYYY-MM-DDTHH:mm:ss.SSSZZ"
-#   service:
-#     pipelines:
-#       default_pipeline:
-#         receivers: [my-app-receiver]
-#         processors: [my-app-processor]
-
-
-# logging:
-#   receivers:
-#     my-app-receiver:
-#       type: files
-#       include_paths:
-#         - /var/log/webapp/app.log
-#       record_log_file_path: true
-#   processors:
-#     my-app-processor:
-#       type: parse_json
-#       time_key: time
-#       time_format: "YYYY-MM-DDTHH:mm:ss.SSSZ"
-#     move_severity:
-#       type: modify_fields
-#       fields:
-#         severity:
-#           move_from: jsonPayload.severity
-#   service:
-#     pipelines:
-#       default_pipeline:
-#         receivers: [my-app-receiver]
-#         processors: [my-app-processor, move_severity]
-
 logging:
   receivers:
     my-app-receiver:
@@ -51,7 +9,7 @@ logging:
     my-app-processor:
       type: parse_json
       time_key: jsonPayload.timestamp
-      time_format: "%Y-%m-%dT%H:%M:%S.%L%Z"
+      time_format: "YYYY-MM-DDTHH:mm:ss.SSSZ"
     move_severity:
       type: modify_fields
       fields:

@@ -8,8 +8,7 @@ import logger from "../logger/logger.js";
 const getUserInfo = async (req, res) => {
   try {
     if (req.headers.authorization === undefined) {
-      logger.error("Authorization header is missing.");
-      // res.status(403).send("Authorization header is missing.");
+      logger.warn("Authorization header is missing.");
       res.status(403).json({ message: "Authorization header is missing." });
     }
     // Retrieve user information (excluding password)
@@ -106,7 +105,7 @@ const createUserPost = async (req, res) => {
 
   const existingUser = await User.findOne({ where: { username } });
   if (existingUser) {
-    logger.info("User with this email already exists");
+    logger.warn(`User with username '${username}' already exists`, { username: username });
     return res
       .status(400)
       .json({ message: "User with this email already exists" });
@@ -119,6 +118,8 @@ const createUserPost = async (req, res) => {
   });
 
   // Return the created user
+  logger.info("New user created successfully", { username: req.body.username });
+
   res.status(201).json({
     id: newUser.id,
     first_name: newUser.first_name,
@@ -206,6 +207,7 @@ const updateUser = async (req, res) => {
     }
     // Check if the user is updating their own account
     if (user.id !== userId) {
+      logger.warn("User can only update his/her own account");
       return res
         .status(403)
         .json({ message: "User Can only update his/her own account only" });
@@ -238,7 +240,7 @@ const updateUser = async (req, res) => {
     });
 
     if (changesMade) {
-      logger.info("User updated successfully");
+      logger.info("User updated successfully", { username: user.username });
       return res.status(204).send();
     } else {
       return res.status(204).send();
