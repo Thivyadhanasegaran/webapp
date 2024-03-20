@@ -104,6 +104,7 @@ app.use((error, req, res, next) => {
   const hasBody = 'body' in error;
 
   if (syntaxError && errorStatus && hasBody) {
+    logger.error("Invalid JSON in request body");
     res.status(400).json({ error: 'Invalid JSON in request body' });
   } else {
     next(error);

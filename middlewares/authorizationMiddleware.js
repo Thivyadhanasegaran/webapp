@@ -8,7 +8,7 @@ const basicAuth = async (req, res, next) => {
   const authHeader = req.headers.authorization;
 
   if (req.headers.authorization === undefined) {
-    logger.warn("Authorization header is missing.");
+    logger.error("Authorization header is missing.");
     return res.status(403).json({ message: "Authorization header is missing." });
   }
   

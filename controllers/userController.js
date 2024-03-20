@@ -7,8 +7,9 @@ import logger from "../logger/logger.js";
 // Function to get user information
 const getUserInfo = async (req, res) => {
   try {
+    logger.debug("Fetching user information");
     if (req.headers.authorization === undefined) {
-      logger.warn("Authorization header is missing.");
+      logger.error("Authorization header is missing.");
       res.status(403).json({ message: "Authorization header is missing." });
     }
     // Retrieve user information (excluding password)
@@ -26,6 +27,7 @@ const getUserInfo = async (req, res) => {
 // Function to create a new user
 const createUser = async (req, res, next) => {
   try {
+    logger.debug("Processing user creation");
     if (Object.keys(req.query).length > 0) {
       return res
         .status(400)
@@ -34,6 +36,7 @@ const createUser = async (req, res, next) => {
 
     // Check for empty request body
     if (Object.keys(req.body).length === 0) {
+      logger.warn("Empty / Invalid payload not allowed");
       return res
         .status(400)
         .json({ message: "Empty / Invalid payload not allowed" });
@@ -41,7 +44,7 @@ const createUser = async (req, res, next) => {
 
     // Check if authorization headers are present
     if (req.headers.authorization) {
-      logger.error("Authorization headers are not allowed for creating a user");
+      logger.warn("Authorization headers are not allowed for creating a user");
       return res
         .status(400)
         .json({
@@ -64,11 +67,13 @@ const createUser = async (req, res, next) => {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     if (!first_name || !last_name || !password || !username) {
+      logger.warn("Missing required fields");
       return res.status(400).json({ message: "Missing required fields" });
     }
 
     // Password validation
     if (password.length < 5) {
+      logger.warn("Password must be at least 5 characters long");
       return res
         .status(400)
         .json({ message: "Password must be at least 5 characters long" });
@@ -106,7 +111,7 @@ const createUserPost = async (req, res) => {
 
   const existingUser = await User.findOne({ where: { username } });
   if (existingUser) {
-    logger.warn(`User with username '${username}' already exists`, { username: username });
+    logger.error(`User with username '${username}' already exists`, { username: username });
     return res
       .status(400)
       .json({ message: "User with this email already exists" });
@@ -139,6 +144,7 @@ const isAlphaString = (str) => {
 
 const updateUserCheck = async (req, res, next) => {
   try {
+    logger.debug("Updating user information");
     if (Object.keys(req.query).length > 0) {
       return res
         .status(400)
@@ -146,6 +152,7 @@ const updateUserCheck = async (req, res, next) => {
     }
     // Check for empty request body
     if (Object.keys(req.body).length === 0) {
+      logger.warn("Empty / Invalid payload not allowed");
       return res
         .status(400)
         .json({ message: "Empty / Invalid payload not allowed" });
@@ -156,10 +163,12 @@ const updateUserCheck = async (req, res, next) => {
       !isAlphaString(req.body.first_name) ||
       !isAlphaString(req.body.last_name)
     ) {
+      logger.warn("Missing required fields");
       return res.status(400).json({ message: "Missing required fields" });
     }
     // Check if the request body is empty
     if (!first_name && !last_name && !password) {
+      logger.warn("Missing required fields");
       return res.status(400).json({ message: "Missing required fields" });
     }
 
@@ -176,6 +185,7 @@ const updateUserCheck = async (req, res, next) => {
 
     // Password validation
    if (password && password.length < 5) {
+    logger.warn("Password must be at least 5 characters long");
     return res
       .status(400)
       .json({ message: "Password must be at least 5 characters long" });
@@ -201,6 +211,7 @@ const updateUser = async (req, res) => {
 
   try {
     // Find the user by ID
+   
     const user = await User.findByPk(userId);
     if (!user) {
       logger.error("User not found");
