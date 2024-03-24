@@ -5,15 +5,15 @@ import logger from "../logger/logger.js";
 import { PubSub } from '@google-cloud/pubsub';
 
 // const pubsub = new PubSub();
-const pubsub = new PubSub({
-  projectId: 'tf-gcp-infra-415001', // Replace with your GCP project ID
-});
+// const pubsub = new PubSub({
+//   projectId: 'tf-gcp-infra-415001', // Replace with your GCP project ID
+// });
 
-// Define the name of the Pub/Sub topic
-const topicName = 'verify_email'; // Replace with your Pub/Sub topic name
+// // Define the name of the Pub/Sub topic
+// const topicName = 'verify_email'; // Replace with your Pub/Sub topic name
 
-// Retrieve the topic instance
-const topic = pubsub.topic(topicName);
+// // Retrieve the topic instance
+// const topic = pubsub.topic(topicName);
 
 // Function to get user information
 const getUserInfo = async (req, res) => {
@@ -135,21 +135,21 @@ const createUserPost = async (req, res) => {
   });
 
   // Publish a message to the Pub/Sub topic
-  const messagePayload = {
-    id: newUser.id,
-    first_name: newUser.first_name,
-    last_name: newUser.last_name,
-    username: newUser.username,
-    account_created: new Date(),
-    account_updated: new Date(),
+  // const messagePayload = {
+  //   id: newUser.id,
+  //   first_name: newUser.first_name,
+  //   last_name: newUser.last_name,
+  //   username: newUser.username,
+  //   account_created: new Date(),
+  //   account_updated: new Date(),
     
-  };
+  // };
 
-  // Convert the message payload to a Buffer
-  const messageBuffer = Buffer.from(JSON.stringify(messagePayload));
+  // // Convert the message payload to a Buffer
+  // const messageBuffer = Buffer.from(JSON.stringify(messagePayload));
 
-  // Publish the message to the topic
-  await topic.publish(messageBuffer);
+  // // Publish the message to the topic
+  // await topic.publish(messageBuffer);
   
   logger.info("New user created successfully", { username: req.body.username });
   // Return the created user
