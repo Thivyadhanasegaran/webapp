@@ -85,6 +85,14 @@ const User = sequelize.define(
       allowNull: true,
       defaultValue: false, 
     },
+    token: {
+      type: DataTypes.UUID, 
+      allowNull: true,
+    },
+    validity_time: {
+      type: DataTypes.DATE, 
+      allowNull: true,
+    },
   },
   {
     hooks: {

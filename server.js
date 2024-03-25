@@ -1,6 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 import healthzRoute from "./routes/healthzRoute.js";
+// import verifyEmail from "./routes/verifyEmail.js"
 import { sequelize } from "./models/healthzModel.js";
 import { handlePayload } from "./middlewares/checkPayloadAndQueryParams.js";
 import userRoute from "./routes/userRoute.js";
@@ -71,6 +72,9 @@ app.use("/healthz", (req, res, next) => {
 
 // Route for healthz
 app.get("/healthz", healthzRoute);
+
+// Route for verify email
+// app.get("/verify-email", verifyEmail);
 
 // Middleware to handle invalid methods for non-existent endpoints
 

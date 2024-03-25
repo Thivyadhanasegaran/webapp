@@ -23,6 +23,9 @@ const getUserInfo = async (req, res) => {
     const user = await User.findByPk(req.user.id, {
       attributes: { exclude: ["password"] },
     });
+    // if (!user.isVerified) {
+    //   return res.status(403).json({ message: 'User account is not verified' });
+    // }
     res.json(user);
   } catch (error) {
     logger.error("Error retrieving user information:", error);
@@ -132,12 +135,7 @@ const createUserPost = async (req, res) => {
 
   // Publish a message to the Pub/Sub topic
   const messagePayload = {
-    id: newUser.id,
-    first_name: newUser.first_name,
-    last_name: newUser.last_name,
     username: newUser.username,
-    account_created: new Date(),
-    account_updated: new Date(), 
   };
 
 // const [topic] = await pubsub.createTopic(topicName);
@@ -240,6 +238,9 @@ const updateUser = async (req, res) => {
       logger.error("User not found");
       return res.status(404).json({ message: "User not found" });
     }
+    // if (!user.isVerified) {
+    //   return res.status(403).json({ message: 'User account is not verified' });
+    // }
     // Check if the user is updating their own account
     if (user.id !== userId) {
       logger.warn("User can only update his/her own account");
@@ -293,3 +294,42 @@ const updateUser = async (req, res) => {
 };
 
 export { createUser, getUserInfo, updateUser, createUserPost, updateUserCheck };
+
+
+const verifyEmail = async (req, res) => {
+  const { username, token, validity_time } = req.query;
+
+  // Check if validity_time is within 2 minutes from now
+  if (moment(validity_time).isBefore(moment().add(2, 'minutes'))) {
+      // Perform token validation (e.g., check if token is valid)
+      if (await validateToken(username, token)) {
+          // Update database to mark the user as verified
+          await updateDatabase(username);
+          res.status(200).send("Email verified successfully!");
+      } else {
+          res.status(400).send("Invalid token or username");
+      }
+  } else {
+      res.status(400).send("Link expired");
+  }
+};
+
+async function validateToken(username, token) {
+  try {
+      const user = await User.findOne({ where: { username, token } });
+      return !!user; 
+  } catch (error) {
+      console.error("Error validating token:", error);
+      throw error;
+  }
+}
+
+async function updateDatabase(username) {
+  try {
+      
+      await User.update({ isVerified: true }, { where: { username } });
+  } catch (error) {
+      console.error('Error updating database:', error);
+      throw error;
+  }
+}
