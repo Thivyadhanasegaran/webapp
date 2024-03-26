@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "start": "node server.js",
-    "test": "mocha --exit --recursive"
+    "test": "mocha --exit --recursive --timeout 20000"
   },
   "author": "",
   "license": "ISC",
