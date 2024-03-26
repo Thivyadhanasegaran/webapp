@@ -3,6 +3,9 @@ import nameValidator from "validator";
 import emailValidator from "email-validator";
 import logger from "../logger/logger.js";
 import { PubSub } from '@google-cloud/pubsub';
+import moment from 'moment';
+
+
 
 // const projectId = 'tf-gcp-infra-415001';
 const pubsub = new PubSub();
@@ -70,6 +73,8 @@ const createUser = async (req, res, next) => {
       "account_created",
       "account_updated",
       "isVerified",
+      "validity_time",
+      "token",
     ];
     const receivedAttributes = Object.keys(req.body);
 
@@ -117,7 +122,10 @@ const createUser = async (req, res, next) => {
 };
 
 const createUserPost = async (req, res) => {
-  const { first_name, last_name, password, username } = req.body;
+
+  const isTesting = process.env.NODE_ENV === 'test';
+  const isVerified = isTesting ? true : false;
+  const { first_name, last_name, password, username, validity_time, token } = req.body;
 
   const existingUser = await User.findOne({ where: { username } });
   if (existingUser) {
@@ -133,8 +141,8 @@ const createUserPost = async (req, res) => {
   //   username,
   // });
 
-  const isTesting = process.env.NODE_ENV === 'test';
-  const isVerified = isTesting ? true : false;
+  // const isTesting = process.env.NODE_ENV === 'test';
+  // const isVerified = isTesting ? true : false;
 
   const newUser = await User.create({
     first_name,
@@ -142,6 +150,8 @@ const createUserPost = async (req, res) => {
     password,
     username,
     isVerified, 
+    validity_time,
+    token,
   });
 
   // Publish a message to the Pub/Sub topic
@@ -169,7 +179,6 @@ const createUserPost = async (req, res) => {
     username: newUser.username,
     account_created: new Date(),
     account_updated: new Date(),
-    isVerified: newUser.isVerified,
   });
 };
 
@@ -250,12 +259,12 @@ const updateUser = async (req, res) => {
     // Find the user by ID
    
     const user = await User.findByPk(userId);
+    if (!user.isVerified) {
+      return res.status(403).json({ message: 'User account is not verified' });
+    }
     if (!user) {
       logger.error("User not found");
       return res.status(404).json({ message: "User not found" });
-    }
-    if (!user.isVerified) {
-      return res.status(403).json({ message: 'User account is not verified' });
     }
     // Check if the user is updating their own account
     if (user.id !== userId) {
@@ -314,6 +323,7 @@ const updateUser = async (req, res) => {
 
 const verifyEmail = async (req, res) => {
   const { username, token } = req.query;
+  const currentTime = new Date();
 
   try {
       // Fetch validity_time from the database based on username
@@ -321,11 +331,17 @@ const verifyEmail = async (req, res) => {
       if (!user) {
           return res.status(400).send("User not found");
       }
-
+      
       const validity_time = user.validity_time;
-
-      // Check if validity_time is within 2 minutes from now
-      if (moment(validity_time).isBefore(moment())) {
+      const validityTime = new Date(validity_time);
+      
+       // Calculate the maximum validity time allowed (2 minutes from the current time)
+    const maxValidityTime = new Date(currentTime.getTime() + 2 * 60 * 1000);
+    console.log('maxValidityTime:', maxValidityTime);
+    console.log('Validity Time:', validityTime);
+    // Check if validity_time is within 2 minutes from now
+    if (validityTime > maxValidityTime) {
+        
           // Perform token validation (e.g., check if token is valid)
           if (await validateToken(username, token)) {
               // Update database to mark the user as verified
@@ -339,7 +355,7 @@ const verifyEmail = async (req, res) => {
       }
   } catch (error) {
       console.error("Error verifying email:", error);
-      return res.status(500).send("Internal server error");
+      return res.status(500).send("Internal server error!!!!!");
   }
 };
 
@@ -366,4 +382,3 @@ async function updateDatabase(username) {
 
 export { createUser, getUserInfo, updateUser, createUserPost, updateUserCheck, verifyEmail };
 
-// export { createUser, getUserInfo, updateUser, createUserPost, updateUserCheck };

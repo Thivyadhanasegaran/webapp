@@ -5,6 +5,7 @@ import verifyEmail from "./routes/verifyEmail.js"
 import { sequelize } from "./models/healthzModel.js";
 import { handlePayload } from "./middlewares/checkPayloadAndQueryParams.js";
 import userRoute from "./routes/userRoute.js";
+import moment from 'moment';
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -19,9 +20,23 @@ app.use("/healthz/*", (req, res) => {
     .send();
 });
 
+// // Middleware to check for invalid query parameters
+// app.use("/", (req, res, next) => {
+//   if (Object.keys(req.query).length > 0) {
+//     res
+//       .status(400)
+//       .header("Cache-Control", "no-cache, no-store, must-revalidate")
+//       .header("Pragma", "no-cache")
+//       .header("X-Content-Type-Options", "nosniff")
+//       .send();
+//   } else {
+//     next();
+//   }
+// });
 // Middleware to check for invalid query parameters
 app.use("/", (req, res, next) => {
-  if (Object.keys(req.query).length > 0) {
+  // Check if the request path is not "/verify-email" and there are query parameters
+  if (req.path !== "/verify-email" && Object.keys(req.query).length > 0) {
     res
       .status(400)
       .header("Cache-Control", "no-cache, no-store, must-revalidate")
@@ -32,7 +47,6 @@ app.use("/", (req, res, next) => {
     next();
   }
 });
-
 // Middleware to check for invalid methods
 app.use("/healthz", (req, res, next) => {
   if (req.method !== "GET") {
@@ -117,6 +131,8 @@ app.use((error, req, res, next) => {
 
 sequelize.sync().then(() => {
   // Start the server after syncing
+  const currentTime = new Date();
+  console.log(currentTime.getTime());
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
   });
