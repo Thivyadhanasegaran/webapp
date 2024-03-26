@@ -36,10 +36,10 @@ variable "image_name" {
   default = "custom-image"
 }
 
-variable "credentials_file" {
- description = "Service Key"
-  default = "tf-gcp-infra-415001-fff167d14bc9.json"
-}
+// variable "credentials_file" {
+//   description = "Service Key"
+//   default = "tf-gcp-infra-415001-fff167d14bc9.json"
+// }
 
 
 
@@ -54,7 +54,7 @@ source "googlecompute" "custom-image" {
   network             = var.network
   ssh_username        = var.ssh_username
   image_name          = "${var.image_name}-${local.timestamp}"
-  credentials_file    = var.credentials_file
+  // credentials_file    = var.credentials_file
 
 }
 
