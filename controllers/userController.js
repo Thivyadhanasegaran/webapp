@@ -5,9 +5,10 @@ import logger from "../logger/logger.js";
 import { PubSub } from '@google-cloud/pubsub';
 
 
-const pubsub = new PubSub({
-  projectId: 'tf-gcp-infra-415001', // Replace with your GCP project ID
-});
+// const pubsub = new PubSub({
+//   projectId: 'tf-gcp-infra-415001', // Replace with your GCP project ID
+// });
+const pubsub = new PubSub();
 const topicName = 'verify_email'; 
 
 
@@ -140,10 +141,21 @@ const createUserPost = async (req, res) => {
 
 // const [topic] = await pubsub.createTopic(topicName);
 
-  const messageBuffer = Buffer.from(JSON.stringify(messagePayload));
+  // const messageBuffer = Buffer.from(JSON.stringify(messagePayload));
 
   // Publish the message to the topic
-  await pubsub.topic(topicName).publish(messageBuffer);
+  // await pubsub.topic(topicName).publish(messageBuffer);
+
+  try {
+    const messageBuffer = Buffer.from(JSON.stringify(messagePayload));
+  
+    // Publish the message to the topic
+    await pubsub.topic(topicName).publish(messageBuffer);
+    console.log('Message published successfully.');
+  } catch (error) {
+    console.error('Error publishing message:', error);
+  }
+  
   
   logger.info("New user created successfully", { username: req.body.username });
   // Return the created user
@@ -296,40 +308,40 @@ const updateUser = async (req, res) => {
 export { createUser, getUserInfo, updateUser, createUserPost, updateUserCheck };
 
 
-const verifyEmail = async (req, res) => {
-  const { username, token, validity_time } = req.query;
+// const verifyEmail = async (req, res) => {
+//   const { username, token, validity_time } = req.query;
 
-  // Check if validity_time is within 2 minutes from now
-  if (moment(validity_time).isBefore(moment().add(2, 'minutes'))) {
-      // Perform token validation (e.g., check if token is valid)
-      if (await validateToken(username, token)) {
-          // Update database to mark the user as verified
-          await updateDatabase(username);
-          res.status(200).send("Email verified successfully!");
-      } else {
-          res.status(400).send("Invalid token or username");
-      }
-  } else {
-      res.status(400).send("Link expired");
-  }
-};
+//   // Check if validity_time is within 2 minutes from now
+//   if (moment(validity_time).isBefore(moment())) {
+//       // Perform token validation (e.g., check if token is valid)
+//       if (await validateToken(username, token)) {
+//           // Update database to mark the user as verified
+//           await updateDatabase(username);
+//           res.status(200).send("Email verified successfully!");
+//       } else {
+//           res.status(400).send("Invalid token or username");
+//       }
+//   } else {
+//       res.status(400).send("Link expired");
+//   }
+// };
 
-async function validateToken(username, token) {
-  try {
-      const user = await User.findOne({ where: { username, token } });
-      return !!user; 
-  } catch (error) {
-      console.error("Error validating token:", error);
-      throw error;
-  }
-}
+// async function validateToken(username, token) {
+//   try {
+//       const user = await User.findOne({ where: { username, token } });
+//       return !!user; 
+//   } catch (error) {
+//       console.error("Error validating token:", error);
+//       throw error;
+//   }
+// }
 
-async function updateDatabase(username) {
-  try {
+// async function updateDatabase(username) {
+//   try {
       
-      await User.update({ isVerified: true }, { where: { username } });
-  } catch (error) {
-      console.error('Error updating database:', error);
-      throw error;
-  }
-}
+//       await User.update({ isVerified: true }, { where: { username } });
+//   } catch (error) {
+//       console.error('Error updating database:', error);
+//       throw error;
+//   }
+// }
