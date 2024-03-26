@@ -6,7 +6,6 @@ axios.defaults.baseURL = "http://localhost:8080";
 describe("Endpoint Integration Tests", () => {
   it("Create a user account and verify its existence using a GET request", async () => {
     // POST request to create a new user
-    this.timeout(5000);
     const userCreationResponse = await axios.post("/v1/user", {
       first_name: "user",last_name: "user",username: "user@gmail.com",password: "user01",
     });
