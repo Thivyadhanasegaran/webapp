@@ -1,7 +1,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 import healthzRoute from "./routes/healthzRoute.js";
-import verifyEmail from "./routes/verifyEmail.js"
+// import verifyEmail from "./routes/verifyEmail.js"
 import { sequelize } from "./models/healthzModel.js";
 import { handlePayload } from "./middlewares/checkPayloadAndQueryParams.js";
 import userRoute from "./routes/userRoute.js";

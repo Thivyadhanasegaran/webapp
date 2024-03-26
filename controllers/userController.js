@@ -358,4 +358,6 @@ const updateUser = async (req, res) => {
 //   }
 // }
 
-export { createUser, getUserInfo, updateUser, createUserPost, updateUserCheck, verifyEmail };
+// export { createUser, getUserInfo, updateUser, createUserPost, updateUserCheck, verifyEmail };
+
+export { createUser, getUserInfo, updateUser, createUserPost, updateUserCheck };
