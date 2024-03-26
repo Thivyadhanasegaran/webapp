@@ -8,7 +8,7 @@ Cloud-Native Application README:
 Installation:
 npm init --> to initialize npm packages
 npm install —> to install all dependencies.
-npm start —> to start the server
+npm start —> to start the server.
 
 Health Check (/healthz)
 •	Checks if the application has connectivity to the database..
