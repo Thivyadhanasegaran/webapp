@@ -17,7 +17,7 @@ Health Check (/healthz)
 
 Method: GET
 •	Description: Endpoint to check the health of the application.
-•	Success Response —> "200 OK"
+•	Success Response —> "200 OK".
 •	Other Endpoints in Method: GET—> Other endpoints are not implemented and will return a "404 Not Found response".
 
 Other API request
