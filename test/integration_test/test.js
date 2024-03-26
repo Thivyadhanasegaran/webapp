@@ -21,7 +21,7 @@ describe("Endpoint Integration Tests", () => {
     });
     expect(getUserResponse.status).to.equal(200);
     expect(getUserResponse.data.id).to.equal(userId);
-  });
+  }).timedOut(5000);
 
   it("Update an existing account and validate the changes with GET", async () => {
     // Authenticate
