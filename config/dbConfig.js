@@ -8,4 +8,5 @@ export const dbConfig = {
   PASSWORD: process.env.DB_PASSWORD,
   DB: process.env.DB,
   dialect: process.env.DIALECT,
+  NODE_ENV: process.env.NODE_ENV,
 };

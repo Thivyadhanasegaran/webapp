@@ -7,6 +7,7 @@ import { Buffer } from "buffer";
 const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
   host: dbConfig.HOST,
   dialect: dbConfig.dialect,
+  NODE_ENV: dbConfig.NODE_ENV,
   logging: false,
   define: {
     timestamps: false, 

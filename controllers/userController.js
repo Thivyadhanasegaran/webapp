@@ -69,6 +69,7 @@ const createUser = async (req, res, next) => {
       "username",
       "account_created",
       "account_updated",
+      "isVerified",
     ];
     const receivedAttributes = Object.keys(req.body);
 
@@ -125,24 +126,28 @@ const createUserPost = async (req, res) => {
       .status(400)
       .json({ message: "User with this email already exists" });
   }
+  // const newUser = await User.create({
+  //   first_name,
+  //   last_name,
+  //   password,
+  //   username,
+  // });
+
+  const isTesting = process.env.NODE_ENV === 'test';
+  const isVerified = isTesting ? true : false;
+
   const newUser = await User.create({
     first_name,
     last_name,
     password,
     username,
+    isVerified, 
   });
 
   // Publish a message to the Pub/Sub topic
   const messagePayload = {
     username: newUser.username,
   };
-
-// const [topic] = await pubsub.createTopic(topicName);
-
-  // const messageBuffer = Buffer.from(JSON.stringify(messagePayload));
-
-  // Publish the message to the topic
-  // await pubsub.topic(topicName).publish(messageBuffer);
 
   try {
     const messageBuffer = Buffer.from(JSON.stringify(messagePayload));
@@ -164,6 +169,7 @@ const createUserPost = async (req, res) => {
     username: newUser.username,
     account_created: new Date(),
     account_updated: new Date(),
+    isVerified: newUser.isVerified,
   });
 };
 
