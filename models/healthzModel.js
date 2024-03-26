@@ -80,19 +80,19 @@ const User = sequelize.define(
       allowNull: false,
       defaultValue: Sequelize.literal("CURRENT_TIMESTAMP"),
     },
-    // isVerified: {
-    //   type: DataTypes.BOOLEAN,
-    //   allowNull: false,
-    //   defaultValue: false, 
-    // },
-    // token: {
-    //   type: DataTypes.UUID, 
-    //   defaultValue: null, 
-    // },
-    // validity_time: {
-    //   type: DataTypes.DATE, 
-    //   defaultValue: null, 
-    // },
+    isVerified: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false, 
+    },
+    token: {
+      type: DataTypes.UUID, 
+      defaultValue: null, 
+    },
+    validity_time: {
+      type: DataTypes.DATE, 
+      defaultValue: null, 
+    },
   },
   {
     hooks: {

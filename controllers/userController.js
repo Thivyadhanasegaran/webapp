@@ -4,11 +4,9 @@ import emailValidator from "email-validator";
 import logger from "../logger/logger.js";
 import { PubSub } from '@google-cloud/pubsub';
 
-
-// const pubsub = new PubSub({
-//   projectId: 'tf-gcp-infra-415001', // Replace with your GCP project ID
-// });
+// const projectId = 'tf-gcp-infra-415001';
 const pubsub = new PubSub();
+// const pubsub = new PubSub({ projectId });
 const topicName = 'verify_email'; 
 
 
@@ -305,43 +303,59 @@ const updateUser = async (req, res) => {
   }
 };
 
-export { createUser, getUserInfo, updateUser, createUserPost, updateUserCheck };
 
 
-// const verifyEmail = async (req, res) => {
-//   const { username, token, validity_time } = req.query;
 
-//   // Check if validity_time is within 2 minutes from now
-//   if (moment(validity_time).isBefore(moment())) {
-//       // Perform token validation (e.g., check if token is valid)
-//       if (await validateToken(username, token)) {
-//           // Update database to mark the user as verified
-//           await updateDatabase(username);
-//           res.status(200).send("Email verified successfully!");
-//       } else {
-//           res.status(400).send("Invalid token or username");
-//       }
-//   } else {
-//       res.status(400).send("Link expired");
-//   }
-// };
+const verifyEmail = async (req, res) => {
+  const { username, token } = req.query;
 
-// async function validateToken(username, token) {
-//   try {
-//       const user = await User.findOne({ where: { username, token } });
-//       return !!user; 
-//   } catch (error) {
-//       console.error("Error validating token:", error);
-//       throw error;
-//   }
-// }
+  try {
+      // Fetch validity_time from the database based on username
+      const user = await User.findOne({ where: { username } });
+      if (!user) {
+          return res.status(400).send("User not found");
+      }
 
-// async function updateDatabase(username) {
-//   try {
+      const validity_time = user.validity_time;
+
+      // Check if validity_time is within 2 minutes from now
+      if (moment(validity_time).isBefore(moment())) {
+          // Perform token validation (e.g., check if token is valid)
+          if (await validateToken(username, token)) {
+              // Update database to mark the user as verified
+              await updateDatabase(username);
+              return res.status(200).send("Email verified successfully!");
+          } else {
+              return res.status(400).send("Invalid token or username");
+          }
+      } else {
+          return res.status(400).send("Link expired");
+      }
+  } catch (error) {
+      console.error("Error verifying email:", error);
+      return res.status(500).send("Internal server error");
+  }
+};
+
+
+async function validateToken(username, token) {
+  try {
+      const user = await User.findOne({ where: { username, token } });
+      return !!user; 
+  } catch (error) {
+      console.error("Error validating token:", error);
+      throw error;
+  }
+}
+
+async function updateDatabase(username) {
+  try {
       
-//       await User.update({ isVerified: true }, { where: { username } });
-//   } catch (error) {
-//       console.error('Error updating database:', error);
-//       throw error;
-//   }
-// }
+      await User.update({ isVerified: true }, { where: { username } });
+  } catch (error) {
+      console.error('Error updating database:', error);
+      throw error;
+  }
+}
+
+export { createUser, getUserInfo, updateUser, createUserPost, updateUserCheck, verifyEmail };

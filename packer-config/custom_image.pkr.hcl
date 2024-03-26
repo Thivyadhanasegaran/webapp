@@ -36,6 +36,12 @@ variable "image_name" {
   default = "custom-image"
 }
 
+variable "credentials_file" {
+ description = "Service Key"
+  default = "tf-gcp-infra-415001-fff167d14bc9.json"
+}
+
+
 
 locals {
   timestamp = regex_replace(formatdate("YYYY-MM-DD-hh-mm-ss", timestamp()), "[- TZ:]", "")
@@ -48,6 +54,8 @@ source "googlecompute" "custom-image" {
   network             = var.network
   ssh_username        = var.ssh_username
   image_name          = "${var.image_name}-${local.timestamp}"
+  credentials_file    = var.credentials_file
+
 }
 
 build {
