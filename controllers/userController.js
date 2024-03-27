@@ -132,16 +132,6 @@ const createUserPost = async (req, res) => {
       .status(400)
       .json({ message: "User with this email already exists" });
   }
-  // const newUser = await User.create({
-  //   first_name,
-  //   last_name,
-  //   password,
-  //   username,
-  // });
-
-  // const isTesting = process.env.NODE_ENV === 'test';
-  // const isVerified = isTesting ? true : false;
-
   const newUser = await User.create({
     first_name,
     last_name,
@@ -215,9 +205,6 @@ const updateUserCheck = async (req, res, next) => {
       logger.warn("Missing required fields");
       return res.status(400).json({ message: "Missing required fields" });
     }
-
-   
-
     const unauthorizedFields = Object.keys(req.body).filter(
       (field) => !["first_name", "last_name", "password"].includes(field)
     );
@@ -226,7 +213,6 @@ const updateUserCheck = async (req, res, next) => {
         message: `User cannot update- ${unauthorizedFields.join(", ")}`,
       });
     }
-
     // Password validation
    if (password && password.length < 5) {
     logger.warn("Password must be at least 5 characters long");
@@ -287,7 +273,6 @@ const updateUser = async (req, res) => {
       user.last_name = last_name;
       changesMade = true;
     }
-
     // Update the account_updated field only if changes were made
     if (changesMade) {
       user.account_updated = new Date();
@@ -315,10 +300,6 @@ const updateUser = async (req, res) => {
     }
   }
 };
-
-
-
-
 const verifyEmail = async (req, res) => {
   const { username, token } = req.query;
   const currentTime = new Date();
