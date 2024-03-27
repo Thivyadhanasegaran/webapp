@@ -332,14 +332,15 @@ const verifyEmail = async (req, res) => {
       
       const validity_time = user.validity_time;
       const validityTime = new Date(validity_time);
+      const current_Time = new Date(currentTime);
+
+      console.log("validity_time:" , validity_time);
+      console.log("validityTime:" ,validityTime);
+      console.log("currentTime:", currentTime);
+      console.log("current_Time:" ,current_Time);
       
-       // Calculate the maximum validity time allowed (2 minutes from the current time)
-    const maxValidityTime = new Date(currentTime.getTime() + 2 * 60 * 1000);
-    console.log(currentTime);
-    console.log('maxValidityTime:', maxValidityTime);
-    console.log('Validity Time:', validityTime);
     // Check if validity_time is within 2 minutes from now
-    if (validityTime > maxValidityTime) {
+    if (currentTime < validityTime) {
         
           // Perform token validation (e.g., check if token is valid)
           if (await validateToken(username, token)) {

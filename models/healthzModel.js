@@ -13,6 +13,7 @@ const sequelize = new Sequelize(dbConfig.DB, dbConfig.USER, dbConfig.PASSWORD, {
     timestamps: false, 
   },
   sync: { alter: true },
+  timezone: '+00:00',
 });
 
 // Define Healthz model
