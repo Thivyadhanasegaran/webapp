@@ -6,7 +6,7 @@ import { PubSub } from '@google-cloud/pubsub';
 
 
 const pubsub = new PubSub();
-const topicName = 'verify_email'; 
+const topicName = process.env.TOPIC_NAME; 
 
 
 // Function to get user information
@@ -329,20 +329,17 @@ const verifyEmail = async (req, res) => {
       if (!user) {
           return res.status(400).json({ message: "User not found" });
       }
+      // Check if the user is already verified
+    if (user.isVerified) {
+      return res.status(400).json({ message: "Email already verified" });
+    }
       
       const validity_time = user.validity_time;
       const validityTime = new Date(validity_time);
       const current_Time = new Date(currentTime);
-
-      console.log("validity_time:" , validity_time);
-      console.log("validityTime:" ,validityTime);
-      console.log("currentTime:", currentTime);
-      console.log("current_Time:" ,current_Time);
       
     // Check if validity_time is within 2 minutes from now
     if (currentTime < validityTime) {
-        
-          // Perform token validation (e.g., check if token is valid)
           if (await validateToken(username, token)) {
               // Update database to mark the user as verified
               await updateDatabase(username);

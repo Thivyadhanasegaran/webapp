@@ -44,6 +44,7 @@ jobs:
           echo "HOST=${{ secrets.HOST }}" >> .env
           echo "DIALECT=${{ secrets.DIALECT }}" >> .env
           echo "NODE_ENV=${{ secrets.NODE_ENV }}" >> .env
+          echo "TOPIC_NAME=${{ secrets.TOPIC_NAME }}" >> .env
 
       - name: Install Dependencies
         run: npm install

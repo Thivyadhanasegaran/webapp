@@ -9,4 +9,5 @@ export const dbConfig = {
   DB: process.env.DB,
   dialect: process.env.DIALECT,
   NODE_ENV: process.env.NODE_ENV,
+  TOPIC_NAME: process.env.TOPIC_NAME,
 };
