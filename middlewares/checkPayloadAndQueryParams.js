@@ -51,5 +51,14 @@ const handlePayload= (req, res, next) => {
   next();
 };
 
+function validateQueryParams(req, res, next) {
+  const { username, token } = req.query;
+  if (!username || !token) {
+      return res.status(400).json({ message: "Please provide proper query parameters." });
 
-export {checkPayloadAndQueryParams, handlePayload} ;
+  }
+  next();
+}
+
+
+export {checkPayloadAndQueryParams, handlePayload, validateQueryParams} ;

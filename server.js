@@ -5,7 +5,7 @@ import verifyEmail from "./routes/verifyEmail.js"
 import { sequelize } from "./models/healthzModel.js";
 import { handlePayload } from "./middlewares/checkPayloadAndQueryParams.js";
 import userRoute from "./routes/userRoute.js";
-import moment from 'moment';
+
 
 const app = express();
 const PORT = process.env.PORT || 8080;
@@ -131,8 +131,7 @@ app.use((error, req, res, next) => {
 
 sequelize.sync().then(() => {
   // Start the server after syncing
-  const currentTime = new Date();
-  console.log(currentTime.getTime());
+
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
   });

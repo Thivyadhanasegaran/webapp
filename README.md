@@ -129,3 +129,35 @@ Ops Agent Configuration:
 • Adjusted logging statements within the application code to generate structured logs.
 • Ensured that logs include necessary context and are appropriately categorized by severity.
 
+
+## Assignment 07:
+• Publish Message to Pub/Sub Topic on User Account Creation
+Whenever a new user account is created, the web application publishes a message to a Pub/Sub topic. This message contains relevant information in JSON format that will be utilized by a Cloud Function to send an email to the user and track the link verification process.
+• The payload (message) published to the Pub/Sub topic includes information as 
+Username: The username of the newly created user.
+• All API calls from user accounts that have not been verified are now blocked until the user completes the email verification process. (GET/UPDATE api request)
+
+• Email Verification Process
+The email verification process involves the following steps:
+
+When a user requests to verify their email, the web application checks the validity of the verification link.
+If the link is valid and within the allowed time frame (2 minutes from the current time), the user is marked as isVerified column to true in the database.
+If the link is invalid or has expired, appropriate error messages are returned to the user.
+
+• Endpoints
+Verify Email Endpoint
+Endpoint: /verify-email
+Method: GET
+Description: Verifies the email address of a user by checking the validity of the verification link.
+Parameters:
+username: The username of the user requesting email verification.
+token: The verification token associated with the user.
+Middleware:
+Basic Authentication Middleware: Used to authenticate API requests.
+Database Connection Middleware: Checks the database connection before processing API requests.
+Payload and Query Parameters Middleware: Validates payload and query parameters of API requests.
+Response:
+200 OK: If the email is successfully verified.
+400 Bad Request: If the email verification link is invalid or has expired.
+500 Internal Server Error: If there is an internal server error during the verification process.
+

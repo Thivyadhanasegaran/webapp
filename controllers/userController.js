@@ -3,13 +3,9 @@ import nameValidator from "validator";
 import emailValidator from "email-validator";
 import logger from "../logger/logger.js";
 import { PubSub } from '@google-cloud/pubsub';
-import moment from 'moment';
 
 
-
-// const projectId = 'tf-gcp-infra-415001';
 const pubsub = new PubSub();
-// const pubsub = new PubSub({ projectId });
 const topicName = 'verify_email'; 
 
 
@@ -79,7 +75,9 @@ const createUser = async (req, res, next) => {
     const receivedAttributes = Object.keys(req.body);
 
     const { first_name, last_name, password, username } = req.body;
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailRegex = /^[^\s@%]+@[^\s@]+\.[^\s@]+$/;
+
 
     if (!first_name || !last_name || !password || !username) {
       logger.warn("Missing required fields");
@@ -329,7 +327,7 @@ const verifyEmail = async (req, res) => {
       // Fetch validity_time from the database based on username
       const user = await User.findOne({ where: { username } });
       if (!user) {
-          return res.status(400).send("User not found");
+          return res.status(400).json({ message: "User not found" });
       }
       
       const validity_time = user.validity_time;
@@ -337,6 +335,7 @@ const verifyEmail = async (req, res) => {
       
        // Calculate the maximum validity time allowed (2 minutes from the current time)
     const maxValidityTime = new Date(currentTime.getTime() + 2 * 60 * 1000);
+    console.log(currentTime);
     console.log('maxValidityTime:', maxValidityTime);
     console.log('Validity Time:', validityTime);
     // Check if validity_time is within 2 minutes from now
@@ -346,12 +345,15 @@ const verifyEmail = async (req, res) => {
           if (await validateToken(username, token)) {
               // Update database to mark the user as verified
               await updateDatabase(username);
-              return res.status(200).send("Email verified successfully!");
+              return res.status(200).json({ message: "Email verified successfully!" });
+
           } else {
-              return res.status(400).send("Invalid token or username");
+              return res.status(400).json({ message: "Invalid token or username" });
+
           }
       } else {
-          return res.status(400).send("Link expired");
+          return res.status(400).json({ message: "Link expired" });
+
       }
   } catch (error) {
       console.error("Error verifying email:", error);
