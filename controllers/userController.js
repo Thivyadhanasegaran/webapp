@@ -303,6 +303,7 @@ const updateUser = async (req, res) => {
 };
 const verifyEmail = async (req, res) => {
   const { username, token } = req.query;
+  
   const currentTime = new Date();
 
   try {
