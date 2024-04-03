@@ -5,7 +5,7 @@ import logger from "../logger/logger.js";
 
 const checkPayloadAndQueryParams = (req, res, next) => {
   try {
-    if (Object.keys(req.body).length > 0 || req.headers["content-length"] > 0) {
+    if (Object.keys(req.body).length > 0 || parseInt(req.headers['content-length']) > 0) {
       return res
         .status(400)
         .header("Cache-Control", "no-cache, no-store, must-revalidate")
