@@ -75,8 +75,9 @@ const createUser = async (req, res, next) => {
     const receivedAttributes = Object.keys(req.body);
 
     const { first_name, last_name, password, username } = req.body;
-    // const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const emailRegex = /^[^\s@%]+@[^\s@]+\.[^\s@]+$/;
+     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    
+    // const emailRegex = /^[^\s@%]+@[^\s@]+\.[^\s@]+$/;
 
 
     if (!first_name || !last_name || !password || !username) {

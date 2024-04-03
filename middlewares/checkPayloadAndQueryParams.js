@@ -30,7 +30,7 @@ const checkPayloadAndQueryParams = (req, res, next) => {
 const handlePayload= (req, res, next) => {
  
   // Check if 'content-length' header is present and greater than 0
-  if (req.headers['content-length'] && req.headers['content-length'] > 0) {
+  if (req.headers['content-length'] && parseInt(req.headers['content-length']) > 0) {
       return res
           .status(400)
           .set("Cache-Control", "no-cache, no-store, must-revalidate")
