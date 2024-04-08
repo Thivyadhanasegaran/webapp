@@ -139,14 +139,16 @@ jobs:
               --description="${{ secrets.WEBAPP_TEMPLATE_DESCRIPTION }}" \
               --machine-type=${{ secrets.MACHINE_TYPE }} \
               --region=${{ secrets.REGION }} \
-              --disk=name=source-image,boot=yes,auto-delete=yes \
-              --source-image=${{ steps.get_latest_image_id.outputs.image_id }} \
-              --source-image-encryption-key=ksm_key_self_link=${{ secrets.KMS_KEY_SELF_LINK }} \
-              --network=subnet=${{ secrets.WEBAPP_SUBNET }},access-config=one-to-one-nat \
+              --disk="name=source-instance,boot=yes,auto-delete=yes" \
+              --source-instance=${{ steps.get_latest_image_id.outputs.image_id }} \
+              --source-instance-encryption-key="ksm_key_self_link=${{ secrets.KMS_KEY_SELF_LINK }}" \
+              --network-interface="network=${{ secrets.VPC_NETWORK }},subnet=${{ secrets.WEBAPP_SUBNET }},access-config=''" \
+
+              
               --service-account=${{ secrets.EMAIL }} \
               --scopes=${{ secrets.SCOPES }} \
               --tags=${{ secrets.TARGET_TAGS_HTTP }} \
-              --metadata=SQL_DB_USER=${{ secrets.SQL_DB_USER }},SQL_DB_PASSWORD=${{ secrets.SQL_DB_PASSWORD }},SQL_HOST=${{ secrets.SQL_HOST }},SQL_DB=${{ secrets.SQL_DB }},SQL_DIALECT=${{ secrets.SQL_DIALECT }},SQL_TOPIC_NAME=${{ secrets.SQL_TOPIC_NAME }},SQL_LOGPATH=${{ secrets.SQL_LOGPATH }}
+              --metadata="SQL_DB_USER=${{ secrets.SQL_DB_USER }},SQL_DB_PASSWORD=${{ secrets.SQL_DB_PASSWORD }},SQL_HOST=${{ secrets.SQL_HOST }},SQL_DB=${{ secrets.SQL_DB }},SQL_DIALECT=${{ secrets.SQL_DIALECT }},SQL_TOPIC_NAME=${{ secrets.SQL_TOPIC_NAME }},SQL_LOGPATH=${{ secrets.SQL_LOGPATH }}"
 
       - name: Update Managed Instance Group with new template
         run: | 
