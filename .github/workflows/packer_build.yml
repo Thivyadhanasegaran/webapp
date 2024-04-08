@@ -109,12 +109,18 @@ jobs:
             IMAGE_ID=$(gcloud compute images list --filter="name=^${{ secrets.IMAGE_NAME_PREFIX }}-*" --sort-by="creationTimestamp desc" --format="value(ID)" | head -n 1)
             echo "::set-output name=image_id::$IMAGE_ID"
         
+      # - name: Create new Instance Template version
+      #   run: |
+      #       gcloud compute instance-templates create new-webapp-instance-template 
+      #       --source-image=${{ steps.get_latest_image_id.outputs.image_id }}
+      #       --metadata=SQL_DB_USER=${{ secrets.SQL_DB_USER }},SQL_DB_PASSWORD=${{ secrets.SQL_DB_PASSWORD }},SQL_HOST=${{ secrets.SQL_HOST }}
+      
       - name: Create new Instance Template version
         run: |
-            gcloud compute instance-templates create new-webapp-instance-template 
-            --source-image=${{ steps.get_latest_image_id.outputs.image_id }}
-            --metadata=SQL_DB_USER=${{ secrets.SQL_DB_USER }},SQL_DB_PASSWORD=${{ secrets.SQL_DB_PASSWORD }},SQL_HOST=${{ secrets.SQL_HOST }}
-
+            gcloud compute instance-templates create new-webapp-instance-template \
+              --source-image=${{ steps.get_latest_image_id.outputs.image_id }} \
+              --metadata=SQL_DB_USER=${{ secrets.SQL_DB_USER }},SQL_DB_PASSWORD=${{ secrets.SQL_DB_PASSWORD }},SQL_HOST=${{ secrets.SQL_HOST }}
+          
 
       - name: Update Managed Instance Group with new template
         run: | 
