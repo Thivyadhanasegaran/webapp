@@ -118,7 +118,7 @@ jobs:
       - name: Create new Instance Template version
         run: |
             gcloud compute instance-templates create new-webapp-instance-template \
-              --source-image=${{ steps.get_latest_image_id.outputs.image_id }} \
+              --source-instance=${{ steps.get_latest_image_id.outputs.image_id }} \
               --metadata=SQL_DB_USER=${{ secrets.SQL_DB_USER }},SQL_DB_PASSWORD=${{ secrets.SQL_DB_PASSWORD }},SQL_HOST=${{ secrets.SQL_HOST }}
           
 
