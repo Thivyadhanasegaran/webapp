@@ -2,14 +2,14 @@ name: Workflow CI
  
 on:
   pull_request:
-    types: [closed]
+    # types: [closed]
     branches:
       - main
 
 jobs:
   build:
     name: test-build
-    if: github.event.pull_request.merged == true
+    # if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
          
     strategy:
@@ -93,8 +93,47 @@ jobs:
       - name: Initialize Packer
         run: packer init packer-config/custom_image.pkr.hcl
 
+      - name: Format Packer template
+        run: packer fmt -check packer-config/custom_image.pkr.hcl
+
+      - name: Validate Packer template
+        run: packer validate -var 'project_id=${{ secrets.GCP_PROJECT_ID }}' packer-config/custom_image.pkr.hcl
+      
+
       - name: Build custom image
         run:  packer build -var 'project_id=${{ secrets.GCP_PROJECT_ID }}'  packer-config/custom_image.pkr.hcl
 
+      - name: Get Latest Image ID
+        id: get_latest_image_id
+        run: |
+            IMAGE_ID=$(gcloud compute images list --filter="name=^${{ secrets.IMAGE_NAME_PREFIX }}-*" --sort-by="creationTimestamp desc" --format="value(ID)" | head -n 1)
+            echo "::set-output name=image_id::$IMAGE_ID"
+        
+      - name: Create new Instance Template version
+        run: |
+            gcloud compute instance-templates create new-webapp-instance-template 
+            --source-image=${{ steps.get_latest_image_id.outputs.image_id }}
+            --metadata=SQL_DB_USER=${{ secrets.SQL_DB_USER }},SQL_DB_PASSWORD=${{ secrets.SQL_DB_PASSWORD }},SQL_HOST=${{ secrets.SQL_HOST }}
 
-       
+
+      - name: Update Managed Instance Group with new template
+        run: | 
+          gcloud compute instance-groups managed set-instance-template webapp_instance_group_manager --template=new-webapp-instance-template
+
+      - name: Recreate instances in Managed Instance Group
+        run: |
+          gcloud compute instance-groups managed recreate-instances webapp_instance_group_manager
+
+      # - name: Wait for Managed Instance Group refresh to complete
+      #   run: |
+      #     gcloud compute instance-groups managed wait-until webapp_instance_group_manager --zone=us-east1 --stable
+      
+      - name: Wait for Managed Instance Group refresh to complete
+        run: |
+          while true; do
+            status=$(gcloud compute instance-groups managed describe webapp_instance_group_manager --zone=us-east1 --format=json | jq -r '.versionTarget.isReached')
+            if [ "$status" = "true" ]; then
+              break
+            fi
+            sleep 10
+          done
