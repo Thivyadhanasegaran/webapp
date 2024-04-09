@@ -159,8 +159,8 @@ jobs:
             --description=${{ secrets.WEBAPP_TEMPLATE_DESCRIPTION }} \
             --machine-type=${{ secrets.MACHINE_TYPE }} \
             --region=${{ secrets.REGION }} \
-            --disk=name=${{ steps.get_latest_image_id.outputs.image_id }},boot=yes,auto-delete=yes, \
-            --boot-disk-size=${{ secrets.DISK_SIZE }}, \
+            --disk=name=${{ steps.get_latest_image_id.outputs.image_id }},boot=yes,auto-delete=yes \
+            --boot-disk-size=${{ secrets.DISK_SIZE }} \
             --boot-disk-type=${{ secrets.DISK_TYPE }} \
             --metadata=startup-script='#!/bin/bash
             ENV_FILE=\"/opt/webapp/.env\"
