@@ -168,11 +168,12 @@ jobs:
         run: |
           RANDOM_ID=$(echo ${{ steps.generate_random_id.outputs.random_id }})
           TEMPLATE_NAME="webapp-instance-template-${RANDOM_ID}"
-          
+          IMAGE_ID="${{ steps.get_latest_image_id.outputs.image_id }}" 
+
           gcloud compute instance-templates create $TEMPLATE_NAME \
           --machine-type=e2-medium \
           --region=us-east1 \
-          --create-disk=image=projects/tf-gcp-infra-415001/global/images/custom-image-20240403192718,boot=yes,auto-delete=yes,device-name=persistent-disk-0,size=100,type=pd-balanced,kms-key=projects/tf-gcp-infra-415001/locations/us-east1/keyRings/web-key-ring2/cryptoKeys/vm-cmek-key \
+          --create-disk=$IMAGE_ID,boot=yes,auto-delete=yes,device-name=persistent-disk-0,size=100,type=pd-balanced,kms-key=projects/tf-gcp-infra-415001/locations/us-east1/keyRings/web-key-ring2/cryptoKeys/vm-cmek-key \
           --metadata=startup-script='#!/bin/bash
                     ENV_FILE="/opt/webapp/.env"
                     if [ ! -f "$ENV_FILE" ]; then
@@ -192,7 +193,8 @@ jobs:
           --service-account=vm-service-account-id@tf-gcp-infra-415001.iam.gserviceaccount.com \
           --network=https://www.googleapis.com/compute/v1/projects/tf-gcp-infra-415001/global/networks/my-vpc \
           --subnet=https://www.googleapis.com/compute/v1/projects/tf-gcp-infra-415001/regions/us-east1/subnetworks/webapp
-            
+          --instance-template-region=us-east1
+           
       - name: Start rolling update for Managed Instance Group
         run: |    
          RANDOM_ID=$(echo ${{ steps.generate_random_id.outputs.random_id }})
