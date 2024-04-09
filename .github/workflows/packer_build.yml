@@ -196,7 +196,7 @@ jobs:
       - name: Start rolling update for Managed Instance Group
         run: |          
          echo "Random ID: $RANDOM_ID"
-         echo webapp-instance-template-${RANDOM_ID}
+         echo webapp-instance-template-${{ steps.generate_random_id.outputs.random_id }}
          gcloud compute instance-groups managed rolling-action start-update webapp-instance-group-manager --version=template=webapp-instance-template-${RANDOM_ID} --region=${{ secrets.REGION }}
 
 
