@@ -202,11 +202,9 @@ jobs:
 
       - name: Wait for Managed Instance Group refresh to complete
         run: |    
-          - name: Wait for Managed Instance Group refresh to complete
-          run: |
-            gcloud compute instance-groups managed wait-until webapp-instance-group-manager \
-            --version-target-reached \
-            --region=${{ secrets.REGION }}
+          gcloud compute instance-groups managed wait-until webapp-instance-group-manager \
+          --version-target-reached \
+          --region=${{ secrets.REGION }}
         
 
 
