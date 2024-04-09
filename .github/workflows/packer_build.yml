@@ -103,13 +103,22 @@ jobs:
       # - name: Build custom image
       #   run:  packer build -var 'project_id=${{ secrets.GCP_PROJECT_ID }}'  packer-config/custom_image.pkr.hcl
 
+      # - name: Get Latest Image ID
+      #   id: get_latest_image_id
+      #   run: |
+      #       IMAGE_ID=$(gcloud compute images list --filter="name=^custom-image-*" --sort-by="creationTimestamp desc" --format="value(ID)" | head -n 1)
+      #       echo "Latest Image ID: $IMAGE_ID" 
+      #       echo "::set-output name=image_id::$IMAGE_ID"
+     
+
       - name: Get Latest Image ID
         id: get_latest_image_id
         run: |
-            IMAGE_ID=$(gcloud compute images list --filter="name=^custom-image-*" --sort-by="creationTimestamp desc" --format="value(ID)" | head -n 1)
-            echo "Latest Image ID: $IMAGE_ID" 
-            echo "::set-output name=image_id::$IMAGE_ID"
-     
+              IMAGE_ID=$(gcloud compute images list --filter="name=^custom-image-*" --format="value(NAME)" --sort-by="~creationTimestamp" | head -n 1)
+              echo "Latest Image ID: $IMAGE_ID" 
+              echo "::set-output name=image_id::$IMAGE_ID"
+            
+
       - name: Generate Random ID
         id: generate_random_id
         run: |
