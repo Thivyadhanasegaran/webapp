@@ -179,9 +179,7 @@ jobs:
           RANDOM_ID=$(echo ${{ steps.generate_random_id.outputs.random_id }})
           TEMPLATE_NAME="webapp-instance-template-${RANDOM_ID}"
           IMAGE_ID=$(echo ${{ steps.get_latest_image_id.outputs.image_id }})
-          IMAGE_ID="${{ steps.get_latest_image_id.outputs.image_id }}" 
           echo "Latest Image Name: $IMAGE_ID"
-
           gcloud compute instance-templates create $TEMPLATE_NAME \
           --machine-type=e2-medium \
           --region=us-east1 \
