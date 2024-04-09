@@ -195,14 +195,14 @@ jobs:
             
       - name: Start rolling update for Managed Instance Group
         run: |
-         gcloud compute instance-groups managed rolling-action start-update webapp_instance_group_manager --version=template=$TEMPLATE_NAME --region=${{ secrets. REGION }} 
+         gcloud compute instance-groups managed rolling-action start-update webapp-instance-group-manager --version=template=$TEMPLATE_NAME --region=${{ secrets. REGION }} 
 
 
       - name: Wait for Managed Instance Group refresh to complete
         run: |    
           - name: Wait for Managed Instance Group refresh to complete
           run: |
-            gcloud compute instance-groups managed wait-until webapp_instance_group_manager \
+            gcloud compute instance-groups managed wait-until webapp-instance-group-manager \
             --version-target-reached \
             --region=${{ secrets.REGION }}
         
