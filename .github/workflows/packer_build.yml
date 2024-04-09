@@ -150,7 +150,6 @@ jobs:
 
 
 
-     # --create-disk=image=${{ steps.get_latest_image_id.outputs.image_id }},auto-delete=yes,boot=yes,size=${{ secrets.DISK_SIZE }},type=${{ secrets.DISK_TYPE }} \
 
       - name: Create new Instance Template version
         run: |
