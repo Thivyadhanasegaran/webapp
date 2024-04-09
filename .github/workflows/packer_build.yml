@@ -145,7 +145,7 @@ jobs:
             # --tags=${{ secrets.TARGET_TAGS_HTTP }} \
             # --metadata="SQL_DB_USER=${{ secrets.SQL_DB_USER }},SQL_DB_PASSWORD=${{ secrets.SQL_DB_PASSWORD }},SQL_HOST=${{ secrets.SQL_HOST }},SQL_DB=${{ secrets.SQL_DB }},SQL_DIALECT=${{ secrets.SQL_DIALECT }},SQL_TOPIC_NAME=${{ secrets.SQL_TOPIC_NAME }},SQL_LOGPATH=${{ secrets.SQL_LOGPATH }}"
       
-            gcloud compute instance-templates create new-webapp-instance-template \
+            gcloud compute instance-templates create new-webapp-instance-template1 \
             --project=tf-gcp-infra-415001 \ 
             --description=Instance\ template\ for\ web\ application \ 
             --machine-type=e2-medium \
