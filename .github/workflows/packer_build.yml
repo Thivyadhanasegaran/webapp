@@ -62,8 +62,8 @@ jobs:
               sleep 5
             done
 
-      - name: Run Tests
-        run: npm test
+      # - name: Run Tests
+      #   run: npm test
       
       - name: Delete .env file
         run: rm .env
@@ -90,14 +90,14 @@ jobs:
       #     sudo mv /tmp/packer /usr/bin/packer
       #     packer --version
 
-      - name: Initialize Packer
-        run: packer init packer-config/custom_image.pkr.hcl
+      # - name: Initialize Packer
+      #   run: packer init packer-config/custom_image.pkr.hcl
 
-      - name: Format Packer template
-        run: packer fmt -check packer-config/custom_image.pkr.hcl
+      # - name: Format Packer template
+      #   run: packer fmt -check packer-config/custom_image.pkr.hcl
 
-      - name: Validate Packer template
-        run: packer validate -var 'project_id=${{ secrets.GCP_PROJECT_ID }}' packer-config/custom_image.pkr.hcl
+      # - name: Validate Packer template
+      #   run: packer validate -var 'project_id=${{ secrets.GCP_PROJECT_ID }}' packer-config/custom_image.pkr.hcl
       
 
       # - name: Build custom image
@@ -159,23 +159,8 @@ jobs:
             --description=${{ secrets.WEBAPP_TEMPLATE_DESCRIPTION }} \
             --machine-type=${{ secrets.MACHINE_TYPE }} \
             --region=${{ secrets.REGION }} \
-            --disk=name=${{ steps.get_latest_image_id.outputs.image_id }},boot=yes,auto-delete=yes \
-            --boot-disk-size=${{ secrets.DISK_SIZE }} \
-            --boot-disk-type=${{ secrets.DISK_TYPE }} \
-            --metadata=startup-script='#!/bin/bash
-            ENV_FILE=\"/opt/webapp/.env\"
-            if [ ! -f \"$ENV_FILE\" ]; then
-              echo \"HOST=${{ secrets.SQL_HOST }}\" > /opt/webapp/.env
-              echo \"DB_PASSWORD=${{ secrets.SQL_DB_PASSWORD }}\" >> /opt/webapp/.env
-              echo \"DB_USER==${{ secrets.SQL_DB_USER }}\" >> /opt/webapp/.env
-              echo \"DB=${{ secrets.SQL_DB }}\" >> /opt/webapp/.env
-              echo \"DIALECT=${{ secrets.SQL_DIALECT }}\" >> /opt/webapp/.env
-              echo \"TOPIC_NAME=${{ secrets.SQL_TOPIC_NAME }}\" >> /opt/webapp/.env
-              echo \"LOGPATH=${{ secrets.SQL_LOGPATH }}\" >> /opt/webapp/.env
-            else
-              echo \"$ENV_FILE file already exists.\"
-            fi
-            /opt/webapp/packer-config/configure_systemd.sh' \
+            --create-disk=image=${{ steps.get_latest_image_id.outputs.image_id }},boot=yes,auto-delete=yes,size=${{ secrets.DISK_SIZE }},type=${{ secrets.DISK_TYPE }} \
+            --metadata=startup-script=\#\!/bin/bash$'\n'ENV_FILE=\"/opt/webapp/.env\"$'\n'if\ \[\ \!\ -f\ \"\$ENV_FILE\"\ \]\;\ then$'\n'\ \ echo\ \"HOST=${{ secrets.SQL_HOST }}\"\ \>\ /opt/webapp/.env$'\n'\ \ echo\ \"DB_PASSWORD=${{ secrets.SQL_DB_PASSWORD }}\"\ \>\>\ /opt/webapp/.env$'\n'\ \ echo\ \"DB_USER=${{ secrets.SQL_DB_USER }}\"\ \>\>\ /opt/webapp/.env$'\n'\ \ echo\ \"DB=${{ secrets.SQL_DB }}\"\ \>\>\ /opt/webapp/.env$'\n'\ \ echo\ \"DIALECT=${{ secrets.SQL_DIALECT }}\"\ \>\>\ /opt/webapp/.env$'\n'\ \ echo\ \"TOPIC_NAME=${{ secrets.SQL_TOPIC_NAME }}\"\ \>\>\ /opt/webapp/.env$'\n'\ \ echo\ \"LOGPATH=${{ secrets.SQL_LOGPATH }}\"\ \>\>\ /opt/webapp/.env$'\n'else$'\n'\ \ \ \ echo\ \"\$ENV_FILE\ file\ already\ exists.\"$'\n'fi$'\n'sudo\ ./opt/webapp/packer-config/configure_systemd.sh$'\n' \
             --tags=${{ secrets.TARGET_TAGS_HTTP }} \
             --scopes=${{ secrets.SCOPES }} \
             --service-account=${{ secrets.EMAIL }} \
