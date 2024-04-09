@@ -192,25 +192,20 @@ jobs:
           --service-account=vm-service-account-id@tf-gcp-infra-415001.iam.gserviceaccount.com \
           --network=https://www.googleapis.com/compute/v1/projects/tf-gcp-infra-415001/global/networks/my-vpc \
           --subnet=https://www.googleapis.com/compute/v1/projects/tf-gcp-infra-415001/regions/us-east1/subnetworks/webapp
-      
-      
-      # - name: Update Managed Instance Group with new template
-      #   run: | 
-      #     gcloud compute instance-groups managed set-instance-template webapp_instance_group_manager --template=$TEMPLATE_NAME \
-      #     [--region=${{ secrets. REGION }}]
-
+            
       - name: Start rolling update for Managed Instance Group
         run: |
-          gcloud compute instance-groups managed rolling-action start-update webapp_instance_group_manager --version=template=$TEMPLATE_NAME \
-          [--region=${{ secrets. REGION }}]
+         gcloud compute instance-groups managed rolling-action start-update webapp_instance_group_manager --version=template=$TEMPLATE_NAME --region=${{ secrets. REGION }} 
+
 
       - name: Wait for Managed Instance Group refresh to complete
-        run: |
-          gcloud compute instance-groups managed wait-until webapp_instance_group_manager \
-          --version-target-reached \
-          [--region=${{ secrets. REGION }}]
-      
-
+        run: |    
+          - name: Wait for Managed Instance Group refresh to complete
+          run: |
+            gcloud compute instance-groups managed wait-until webapp_instance_group_manager \
+            --version-target-reached \
+            --region=${{ secrets.REGION }}
+        
 
 
 
