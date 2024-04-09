@@ -147,6 +147,11 @@ jobs:
       #       --network-interface=[network=${{ secrets.VPC_NETWORK }},subnet=${{ secrets.WEBAPP_SUBNET }}] \
       #       --kms-key=projects/${{ secrets.GCP_PROJECT_ID }}/locations/${{ secrets. REGION }}/keyRings/${{ secrets.KMS_KEYRING }}/ cryptoKeys/${{ secrets.KEY_NAME }} 
 
+
+
+
+     # --create-disk=image=${{ steps.get_latest_image_id.outputs.image_id }},auto-delete=yes,boot=yes,size=${{ secrets.DISK_SIZE }},type=${{ secrets.DISK_TYPE }} \
+
       - name: Create new Instance Template version
         run: |
           RANDOM_ID=$(echo ${{ steps.generate_random_id.outputs.random_id }})
@@ -155,7 +160,8 @@ jobs:
             --description=${{ secrets.WEBAPP_TEMPLATE_DESCRIPTION }} \
             --machine-type=${{ secrets.MACHINE_TYPE }} \
             --region=${{ secrets.REGION }} \
-            --create-disk=image=${{ steps.get_latest_image_id.outputs.image_id }},auto-delete=yes,boot=yes,size=${{ secrets.DISK_SIZE }},type=${{ secrets.DISK_TYPE }} \
+            --disk=name=${{ steps.get_latest_image_id.outputs.image_id }},boot=yes,auto-delete=yes,size=${{ secrets.DISK_SIZE }},type=${{ secrets.DISK_TYPE }} \
+
             --metadata=startup-script="#!/bin/bash
             ENV_FILE=\"/opt/webapp/.env\"
             if [ ! -f \"$ENV_FILE\" ]; then
