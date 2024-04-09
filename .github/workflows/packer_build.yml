@@ -151,36 +151,63 @@ jobs:
 
       # gcloud compute instance-templates create $TEMPLATE_NAME \
 
+      # gcloud compute instance-templates create webapp-instance-template1 \
+          #   --description=${{ secrets.WEBAPP_TEMPLATE_DESCRIPTION }} \
+          #   --machine-type=${{ secrets.MACHINE_TYPE }} \
+          #   --region=${{ secrets.REGION }} \
+          #   --create-disk=image=${{ steps.get_latest_image_id.outputs.image_id }},boot=yes,auto-delete=yes,size=${{ secrets.DISK_SIZE }},type=${{ secrets.DISK_TYPE }} \
+          #   --metadata=startup-script=\#\!/bin/bash$'\n'ENV_FILE=\"/opt/webapp/.env\"$'\n'if\ \[\ \!\ -f\ \"\$ENV_FILE\"\ \]\;\ then$'\n'\ \ echo\ \"HOST=${{ secrets.SQL_HOST }}\"\ \>\ /opt/webapp/.env$'\n'\ \ echo\ \"DB_PASSWORD=${{ secrets.SQL_DB_PASSWORD }}\"\ \>\>\ /opt/webapp/.env$'\n'\ \ echo\ \"DB_USER=${{ secrets.SQL_DB_USER }}\"\ \>\>\ /opt/webapp/.env$'\n'\ \ echo\ \"DB=${{ secrets.SQL_DB }}\"\ \>\>\ /opt/webapp/.env$'\n'\ \ echo\ \"DIALECT=${{ secrets.SQL_DIALECT }}\"\ \>\>\ /opt/webapp/.env$'\n'\ \ echo\ \"TOPIC_NAME=${{ secrets.SQL_TOPIC_NAME }}\"\ \>\>\ /opt/webapp/.env$'\n'\ \ echo\ \"LOGPATH=${{ secrets.SQL_LOGPATH }}\"\ \>\>\ /opt/webapp/.env$'\n'else$'\n'\ \ \ \ echo\ \"\$ENV_FILE\ file\ already\ exists.\"$'\n'fi$'\n'sudo\ ./opt/webapp/packer-config/configure_systemd.sh$'\n' \
+          #   --tags=${{ secrets.TARGET_TAGS_HTTP }} \
+          #   --scopes=${{ secrets.SCOPES }} \
+          #   --service-account=${{ secrets.EMAIL }} \
+          #   --network-interface=network=${{ secrets.VPC_NETWORK }},subnet=${{ secrets.WEBAPP_SUBNET }} \
+          #   --boot-disk-kms-key=projects/${{ secrets.GCP_PROJECT_ID }}/locations/${{ secrets.REGION }}/keyRings/${{ secrets.KMS_KEYRING }}/cryptoKeys/${{ secrets.KEY_NAME }} 
+        
+
       - name: Create new Instance Template version
         run: |
           RANDOM_ID=$(echo ${{ steps.generate_random_id.outputs.random_id }})
           TEMPLATE_NAME="webapp-instance-template-${RANDOM_ID}"
-          gcloud compute instance-templates create webapp-instance-template1 \
-            --description=${{ secrets.WEBAPP_TEMPLATE_DESCRIPTION }} \
-            --machine-type=${{ secrets.MACHINE_TYPE }} \
-            --region=${{ secrets.REGION }} \
-            --create-disk=image=${{ steps.get_latest_image_id.outputs.image_id }},boot=yes,auto-delete=yes,size=${{ secrets.DISK_SIZE }},type=${{ secrets.DISK_TYPE }} \
-            --metadata=startup-script=\#\!/bin/bash$'\n'ENV_FILE=\"/opt/webapp/.env\"$'\n'if\ \[\ \!\ -f\ \"\$ENV_FILE\"\ \]\;\ then$'\n'\ \ echo\ \"HOST=${{ secrets.SQL_HOST }}\"\ \>\ /opt/webapp/.env$'\n'\ \ echo\ \"DB_PASSWORD=${{ secrets.SQL_DB_PASSWORD }}\"\ \>\>\ /opt/webapp/.env$'\n'\ \ echo\ \"DB_USER=${{ secrets.SQL_DB_USER }}\"\ \>\>\ /opt/webapp/.env$'\n'\ \ echo\ \"DB=${{ secrets.SQL_DB }}\"\ \>\>\ /opt/webapp/.env$'\n'\ \ echo\ \"DIALECT=${{ secrets.SQL_DIALECT }}\"\ \>\>\ /opt/webapp/.env$'\n'\ \ echo\ \"TOPIC_NAME=${{ secrets.SQL_TOPIC_NAME }}\"\ \>\>\ /opt/webapp/.env$'\n'\ \ echo\ \"LOGPATH=${{ secrets.SQL_LOGPATH }}\"\ \>\>\ /opt/webapp/.env$'\n'else$'\n'\ \ \ \ echo\ \"\$ENV_FILE\ file\ already\ exists.\"$'\n'fi$'\n'sudo\ ./opt/webapp/packer-config/configure_systemd.sh$'\n' \
-            --tags=${{ secrets.TARGET_TAGS_HTTP }} \
-            --scopes=${{ secrets.SCOPES }} \
-            --service-account=${{ secrets.EMAIL }} \
-            --network-interface=network=${{ secrets.VPC_NETWORK }},subnet=${{ secrets.WEBAPP_SUBNET }} \
-            --boot-disk-kms-key=projects/${{ secrets.GCP_PROJECT_ID }}/locations/${{ secrets.REGION }}/keyRings/${{ secrets.KMS_KEYRING }}/cryptoKeys/${{ secrets.KEY_NAME }} 
+          
+          gcloud compute instance-templates create $TEMPLATE_NAME \
+          --machine-type=e2-medium \
+          --region=us-east1 \
+          --create-disk=image=projects/tf-gcp-infra-415001/global/images/custom-image-20240403192718,boot=yes,auto-delete=yes,device-name=persistent-disk-0,size=100,type=pd-balanced,kms-key=projects/tf-gcp-infra-415001/locations/us-east1/keyRings/web-key-ring2/cryptoKeys/vm-cmek-key \
+          --metadata=startup-script='#!/bin/bash
+                    ENV_FILE="/opt/webapp/.env"
+                    if [ ! -f "$ENV_FILE" ]; then
+                      echo "HOST=10.0.2.3" > /opt/webapp/.env
+                      echo "DB_PASSWORD=lnugZyzyBpDdc8zx" >> /opt/webapp/.env
+                      echo "DB_USER=webapp" >> /opt/webapp/.env
+                      echo "DB=webapp" >> /opt/webapp/.env
+                      echo "DIALECT=mysql" >> /opt/webapp/.env
+                      echo "TOPIC_NAME=verify_email" >> /opt/webapp/.env
+                      echo "LOGPATH=/var/log/webapp/app.log" >> /opt/webapp/.env
+                    else
+                      echo "$ENV_FILE file already exists."
+                    fi
+                    /opt/webapp/packer-config/configure_systemd.sh' \
+          --tags=webapp \
+          --scopes=https://www.googleapis.com/auth/cloud-platform \
+          --service-account=vm-service-account-id@tf-gcp-infra-415001.iam.gserviceaccount.com \
+          --network=https://www.googleapis.com/compute/v1/projects/tf-gcp-infra-415001/global/networks/my-vpc \
+          --subnet=https://www.googleapis.com/compute/v1/projects/tf-gcp-infra-415001/regions/us-east1/subnetworks/webapp
+      
+      
+      - name: Update Managed Instance Group with new template
+        run: | 
+          gcloud compute instance-groups managed set-instance-template webapp_instance_group_manager --template=$TEMPLATE_NAME
 
-      # - name: Update Managed Instance Group with new template
-      #   run: | 
-      #     gcloud compute instance-groups managed set-instance-template webapp_instance_group_manager --template=$TEMPLATE_NAME
+      - name: Start rolling update for Managed Instance Group
+        run: |
+          gcloud compute instance-groups managed rolling-action start-update webapp_instance_group_manager --version=template=$TEMPLATE_NAME \
+          [--region=${{ secrets. REGION }}]
 
-      # - name: Start rolling update for Managed Instance Group
-      #   run: |
-      #     gcloud compute instance-groups managed rolling-action start-update webapp_instance_group_manager --version=template=$TEMPLATE_NAME \
-      #     [--region=${{ secrets. REGION }}]
-
-      # - name: Wait for Managed Instance Group refresh to complete
-      #   run: |
-      #     gcloud compute instance-groups managed wait-until webapp_instance_group_manager \
-      #     --version-target-reached \
-      #     [--region=${{ secrets. REGION }}]
+      - name: Wait for Managed Instance Group refresh to complete
+        run: |
+          gcloud compute instance-groups managed wait-until webapp_instance_group_manager \
+          --version-target-reached \
+          [--region=${{ secrets. REGION }}]
       
 
 
@@ -192,7 +219,7 @@ jobs:
 
 
 
-      
+
       # - name: Wait for Managed Instance Group refresh to complete
       #   run: |
       #     while true; do
