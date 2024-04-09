@@ -179,7 +179,7 @@ jobs:
           RANDOM_ID=$(echo ${{ steps.generate_random_id.outputs.random_id }})
           TEMPLATE_NAME="webapp-instance-template-${RANDOM_ID}"
           IMAGE_ID="${{ steps.get_latest_image_id.outputs.image_id }}" 
-          IMAGE_ID=$(echo ${{ steps.get_latest_image_id.outputs.image_id }})
+          echo "Latest Image Name: $IMAGE_ID"
 
           gcloud compute instance-templates create $TEMPLATE_NAME \
           --machine-type=e2-medium \
@@ -203,7 +203,7 @@ jobs:
           --scopes=https://www.googleapis.com/auth/cloud-platform \
           --service-account=vm-service-account-id@tf-gcp-infra-415001.iam.gserviceaccount.com \
           --network=https://www.googleapis.com/compute/v1/projects/tf-gcp-infra-415001/global/networks/my-vpc \
-          --subnet=https://www.googleapis.com/compute/v1/projects/tf-gcp-infra-415001/regions/us-east1/subnetworks/webapp
+          --subnet=https://www.googleapis.com/compute/v1/projects/tf-gcp-infra-415001/regions/us-east1/subnetworks/webapp \
           --instance-template-region=us-east1
            
       - name: Start rolling update for Managed Instance Group
