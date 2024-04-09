@@ -145,18 +145,18 @@ jobs:
             # --tags=${{ secrets.TARGET_TAGS_HTTP }} \
             # --metadata="SQL_DB_USER=${{ secrets.SQL_DB_USER }},SQL_DB_PASSWORD=${{ secrets.SQL_DB_PASSWORD }},SQL_HOST=${{ secrets.SQL_HOST }},SQL_DB=${{ secrets.SQL_DB }},SQL_DIALECT=${{ secrets.SQL_DIALECT }},SQL_TOPIC_NAME=${{ secrets.SQL_TOPIC_NAME }},SQL_LOGPATH=${{ secrets.SQL_LOGPATH }}"
       
-            gcloud compute instance-templates create new-webapp-instance-template 
-            --project=tf-gcp-infra-415001 
-            --description=Instance\ template\ for\ web\ application 
-            --machine-type=e2-medium 
-            --network-interface=network-tier=PREMIUM,subnet=webapp 
-            --metadata=startup-script=\#\!/bin/bash$'\n'ENV_FILE=\"/opt/webapp/.env\"$'\n'if\ \[\ \!\ -f\ \"\$ENV_FILE\"\ \]\;\ then$'\n'\ \ echo\ \"HOST=10.0.2.3\"\ \>\ /opt/webapp/.env$'\n'\ \ echo\ \"DB_PASSWORD=lnugZyzyBpDdc8zx\"\ \>\>\ /opt/webapp/.env$'\n'\ \ echo\ \"DB_USER=webapp\"\ \>\>\ /opt/webapp/.env$'\n'\ \ echo\ \"DB=webapp\"\ \>\>\ /opt/webapp/.env$'\n'\ \ echo\ \"DIALECT=mysql\"\ \>\>\ /opt/webapp/.env$'\n'\ \ echo\ \"TOPIC_NAME=verify_email\"\ \>\>\ /opt/webapp/.env$'\n'\ \ echo\ \"LOGPATH=/var/log/webapp/app.log\"\ \>\>\ /opt/webapp/.env$'\n'else$'\n'\ \ \ \ echo\ \"\$ENV_FILE\ file\ already\ exists.\"$'\n'fi$'\n'sudo\ ./opt/webapp/packer-config/configure_systemd.sh$'\n' 
-            --maintenance-policy=MIGRATE 
-            --provisioning-model=STANDARD 
-            --service-account=vm-service-account-id@tf-gcp-infra-415001.iam.gserviceaccount.com 
-            --scopes=https://www.googleapis.com/auth/cloud-platform 
-            --region=us-east1 
-            --tags=webapp 
+            gcloud compute instance-templates create new-webapp-instance-template \
+            --project=tf-gcp-infra-415001 \ 
+            --description=Instance\ template\ for\ web\ application \ 
+            --machine-type=e2-medium \
+            --network-interface=network-tier=PREMIUM,subnet=webapp \
+            --metadata=startup-script=\#\!/bin/bash$'\n'ENV_FILE=\"/opt/webapp/.env\"$'\n'if\ \[\ \!\ -f\ \"\$ENV_FILE\"\ \]\;\ then$'\n'\ \ echo\ \"HOST=10.0.2.3\"\ \>\ /opt/webapp/.env$'\n'\ \ echo\ \"DB_PASSWORD=lnugZyzyBpDdc8zx\"\ \>\>\ /opt/webapp/.env$'\n'\ \ echo\ \"DB_USER=webapp\"\ \>\>\ /opt/webapp/.env$'\n'\ \ echo\ \"DB=webapp\"\ \>\>\ /opt/webapp/.env$'\n'\ \ echo\ \"DIALECT=mysql\"\ \>\>\ /opt/webapp/.env$'\n'\ \ echo\ \"TOPIC_NAME=verify_email\"\ \>\>\ /opt/webapp/.env$'\n'\ \ echo\ \"LOGPATH=/var/log/webapp/app.log\"\ \>\>\ /opt/webapp/.env$'\n'else$'\n'\ \ \ \ echo\ \"\$ENV_FILE\ file\ already\ exists.\"$'\n'fi$'\n'sudo\ ./opt/webapp/packer-config/configure_systemd.sh$'\n' \
+            --maintenance-policy=MIGRATE \
+            --provisioning-model=STANDARD \
+            --service-account=vm-service-account-id@tf-gcp-infra-415001.iam.gserviceaccount.com \ 
+            --scopes=https://www.googleapis.com/auth/cloud-platform \ 
+            --region=us-east1 \ 
+            --tags=webapp \ 
             --create-disk=auto-delete=yes,boot=yes,device-name=persistent-disk-0,image=projects/tf-gcp-infra-415001/global/images/custom-image-20240403192718,mode=rw,size=100,type=pd-balanced 
            
 
