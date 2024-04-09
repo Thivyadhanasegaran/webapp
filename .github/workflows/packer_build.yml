@@ -163,17 +163,16 @@ jobs:
             --disk=name=${{ steps.get_latest_image_id.outputs.image_id }},boot=yes,auto-delete=yes \
             --boot-disk-size=${{ secrets.DISK_SIZE }} \
             --boot-disk-type=${{ secrets.DISK_TYPE }} \
-      
-            --metadata=startup-script="#!/bin/bash
+            --metadata=startup-script:"#!/bin/bash
             ENV_FILE=\"/opt/webapp/.env\"
             if [ ! -f \"$ENV_FILE\" ]; then
-            echo \"HOST=${{ secrets.SQL_HOST }}\" > /opt/webapp/.env
-            echo \"DB_PASSWORD=${{ secrets.SQL_DB_PASSWORD }}\" >> /opt/webapp/.env
-            echo \"DB_USER==${{ secrets.SQL_DB_USER }}\" >> /opt/webapp/.env
-            echo \"DB=${{ secrets.SQL_DB }}\" >> /opt/webapp/.env
-            echo \"DIALECT=${{ secrets.SQL_DIALECT }}\" >> /opt/webapp/.env
-            echo \"TOPIC_NAME=${{ secrets.SQL_TOPIC_NAME }}\" >> /opt/webapp/.env
-            echo \"LOGPATH=${{ secrets.SQL_LOGPATH }}\" >> /opt/webapp/.env
+              echo \"HOST=${{ secrets.SQL_HOST }}\" > /opt/webapp/.env
+              echo \"DB_PASSWORD=${{ secrets.SQL_DB_PASSWORD }}\" >> /opt/webapp/.env
+              echo \"DB_USER==${{ secrets.SQL_DB_USER }}\" >> /opt/webapp/.env
+              echo \"DB=${{ secrets.SQL_DB }}\" >> /opt/webapp/.env
+              echo \"DIALECT=${{ secrets.SQL_DIALECT }}\" >> /opt/webapp/.env
+              echo \"TOPIC_NAME=${{ secrets.SQL_TOPIC_NAME }}\" >> /opt/webapp/.env
+              echo \"LOGPATH=${{ secrets.SQL_LOGPATH }}\" >> /opt/webapp/.env
             else
               echo \"$ENV_FILE file already exists.\"
             fi
@@ -184,18 +183,9 @@ jobs:
             --network-interface=network=${{ secrets.VPC_NETWORK }},subnet=${{ secrets.WEBAPP_SUBNET }} \
             --boot-disk-kms-key=projects/${{ secrets.GCP_PROJECT_ID }}/locations/${{ secrets.REGION }}/keyRings/${{ secrets.KMS_KEYRING }}/cryptoKeys/${{ secrets.KEY_NAME }} 
 
-
-
       - name: Update Managed Instance Group with new template
         run: | 
           gcloud compute instance-groups managed set-instance-template webapp_instance_group_manager --template=$TEMPLATE_NAME
-
-      # - name: Recreate instances in Managed Instance Group
-      #   run: |
-      #     gcloud compute instance-groups managed recreate-instances webapp_instance_group_manager
-
-
-
 
       - name: Start rolling update for Managed Instance Group
         run: |
