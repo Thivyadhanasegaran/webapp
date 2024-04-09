@@ -100,8 +100,8 @@ jobs:
         run: packer validate -var 'project_id=${{ secrets.GCP_PROJECT_ID }}' packer-config/custom_image.pkr.hcl
       
 
-      - name: Build custom image
-        run:  packer build -var 'project_id=${{ secrets.GCP_PROJECT_ID }}'  packer-config/custom_image.pkr.hcl
+      # - name: Build custom image
+      #   run:  packer build -var 'project_id=${{ secrets.GCP_PROJECT_ID }}'  packer-config/custom_image.pkr.hcl
 
       - name: Get Latest Image ID
         id: get_latest_image_id
@@ -174,7 +174,7 @@ jobs:
             --scopes=${{ secrets.SCOPES }} \
             --service-account=${{ secrets.EMAIL }} \
             --network-interface=network=${{ secrets.VPC_NETWORK }},subnet=${{ secrets.WEBAPP_SUBNET }} \
-            --kms-key=projects/${{ secrets.GCP_PROJECT_ID }}/locations/${{ secrets.REGION }}/keyRings/${{ secrets.KMS_KEYRING }}/cryptoKeys/${{ secrets.KEY_NAME }} 
+            --boot-disk-kms-key=projects/${{ secrets.GCP_PROJECT_ID }}/locations/${{ secrets.REGION }}/keyRings/${{ secrets.KMS_KEYRING }}/cryptoKeys/${{ secrets.KEY_NAME }} 
 
 
 
