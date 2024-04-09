@@ -194,8 +194,8 @@ jobs:
           --subnet=https://www.googleapis.com/compute/v1/projects/tf-gcp-infra-415001/regions/us-east1/subnetworks/webapp
             
       - name: Start rolling update for Managed Instance Group
-        run: |
-         gcloud compute instance-groups managed rolling-action start-update webapp-instance-group-manager --version=template=$TEMPLATE_NAME --region=${{ secrets. REGION }} 
+        run: |          
+         gcloud compute instance-groups managed rolling-action start-update webapp-instance-group-manager --version=template=$TEMPLATE_NAME --region=${{ secrets. REGION }}
 
 
       - name: Wait for Managed Instance Group refresh to complete
