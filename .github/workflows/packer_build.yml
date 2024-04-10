@@ -48,22 +48,22 @@ jobs:
           echo "NODE_ENV=${{ secrets.NODE_ENV }}" >> .env
           echo "TOPIC_NAME=${{ secrets.TOPIC_NAME }}" >> .env
 
-      # - name: Install Dependencies
-      #   run: npm install
+      - name: Install Dependencies
+        run: npm install
 
-      # - name: Start the application
-      #   run: |
-      #       npm start &
+      - name: Start the application
+        run: |
+            npm start &
         
-      # - name: Wait for the application to be ready
-      #   run: |
-      #       sleep 10
-      #       until curl -s http://localhost:8080; do
-      #         sleep 5
-      #       done
+      - name: Wait for the application to be ready
+        run: |
+            sleep 10
+            until curl -s http://localhost:8080; do
+              sleep 5
+            done
 
-      # - name: Run Tests
-      #   run: npm test
+      - name: Run Tests
+        run: npm test
       
       - name: Delete .env file
         run: rm .env
@@ -79,29 +79,29 @@ jobs:
       - name: 'Use gcloud CLI'
         run: 'gcloud info'
         
-      # - name: Create webapp.zip
-      #   run: |
-      #       zip -r webapp.zip ./
+      - name: Create webapp.zip
+        run: |
+            zip -r webapp.zip ./
 
-      # - name: Install Packer
-      #   run: |
-      #     curl -fsSL https://releases.hashicorp.com/packer/1.7.5/packer_1.7.5_linux_amd64.zip -o packer.zip
-      #     unzip packer.zip -d /tmp
-      #     sudo mv /tmp/packer /usr/bin/packer
-      #     packer --version
+      - name: Install Packer
+        run: |
+          curl -fsSL https://releases.hashicorp.com/packer/1.7.5/packer_1.7.5_linux_amd64.zip -o packer.zip
+          unzip packer.zip -d /tmp
+          sudo mv /tmp/packer /usr/bin/packer
+          packer --version
 
-      # - name: Initialize Packer
-      #   run: packer init packer-config/custom_image.pkr.hcl
+      - name: Initialize Packer
+        run: packer init packer-config/custom_image.pkr.hcl
 
-      # - name: Format Packer template
-      #   run: packer fmt -check packer-config/custom_image.pkr.hcl
+      - name: Format Packer template
+        run: packer fmt -check packer-config/custom_image.pkr.hcl
 
-      # - name: Validate Packer template
-      #   run: packer validate -var 'project_id=${{ secrets.GCP_PROJECT_ID }}' packer-config/custom_image.pkr.hcl
+      - name: Validate Packer template
+        run: packer validate -var 'project_id=${{ secrets.GCP_PROJECT_ID }}' packer-config/custom_image.pkr.hcl
       
 
-      # - name: Build custom image
-      #   run:  packer build -var 'project_id=${{ secrets.GCP_PROJECT_ID }}'  packer-config/custom_image.pkr.hcl
+      - name: Build custom image
+        run:  packer build -var 'project_id=${{ secrets.GCP_PROJECT_ID }}'  packer-config/custom_image.pkr.hcl
  
       - name: Generate Random ID
         id: generate_random_id
@@ -114,40 +114,40 @@ jobs:
             RANDOM_ID=$(echo ${{ steps.generate_random_id.outputs.random_id }})
             TEMPLATE_NAME="webapp-instance-template-${RANDOM_ID}"
             IMAGE_ID=$(gcloud compute images list --no-standard-images --format="table(NAME,CREATION_TIMESTAMP)" --sort-by="CREATION_TIMESTAMP" | tail -n 1)
-            IMAGE_NAME="projects/tf-gcp-infra-415001/global/images/${IMAGE_ID}"
+            IMAGE_NAME="projects/${{ secrets.GCP_PROJECT_ID }}/global/images/${IMAGE_ID}"
 
             gcloud compute instance-templates create $TEMPLATE_NAME \
-            --machine-type=e2-medium \
-            --region=us-east1 \
-            --create-disk=image=$IMAGE_NAME,boot=yes,auto-delete=yes,device-name=persistent-disk-0,size=100,type=pd-balanced,kms-key=projects/tf-gcp-infra-415001/locations/us-east1/keyRings/web-key-ring3/cryptoKeys/vm-cmek-key \
+            --machine-type=${{ secrets.MACHINE_TYPE }} \
+            --region=${{ secrets.REGION }} \
+            --create-disk=image=$IMAGE_NAME,device-name=${{ secrets.DEVICE_NAME }},size=${{ secrets.DISK_SIZE }},type=${{ secrets.DISK_TYPE }},boot=yes,auto-delete=yes,kms-key=projects/${{ secrets.GCP_PROJECT_ID }}/locations/${{ secrets.REGION }}/keyRings/${{ secrets.KEY_NAME }}/cryptoKeys/${{ secrets.VM_KMS_KEYNAME }} \
             --metadata=startup-script='#!/bin/bash
                     ENV_FILE="/opt/webapp/.env"
                     if [ ! -f "$ENV_FILE" ]; then
-                      echo "HOST=10.0.2.3" > /opt/webapp/.env
-                      echo "DB_PASSWORD=xXhhnwQbZ6j6Tr5E" >> /opt/webapp/.env
-                      echo "DB_USER=webapp" >> /opt/webapp/.env
-                      echo "DB=webapp" >> /opt/webapp/.env
-                      echo "DIALECT=mysql" >> /opt/webapp/.env
-                      echo "TOPIC_NAME=verify_email" >> /opt/webapp/.env
-                      echo "LOGPATH=/var/log/webapp/app.log" >> /opt/webapp/.env
+                      echo "HOST=${{ secrets.SQL_HOST }}" > /opt/webapp/.env
+                      echo "DB_PASSWORD=${{ secrets.SQL_DB_PASSWORD }}" >> /opt/webapp/.env
+                      echo "DB_USER=${{ secrets.SQL_DB_USER }}" >> /opt/webapp/.env
+                      echo "DB=${{ secrets.SQL_DB }}" >> /opt/webapp/.env
+                      echo "DIALECT=${{ secrets.SQL_DIALECT }}" >> /opt/webapp/.env
+                      echo "TOPIC_NAME=${{ secrets.SQL_TOPIC_NAME }}" >> /opt/webapp/.env
+                      echo "LOGPATH=${{ secrets.SQL_LOGPATH }}" >> /opt/webapp/.env
                     else
                       echo "$ENV_FILE file already exists."
                     fi
                     /opt/webapp/packer-config/configure_systemd.sh' \
-            --tags=webapp \
-            --scopes=https://www.googleapis.com/auth/cloud-platform \
-            --service-account=vm-service-account-id@tf-gcp-infra-415001.iam.gserviceaccount.com \
-            --network=https://www.googleapis.com/compute/v1/projects/tf-gcp-infra-415001/global/networks/my-vpc \
-            --subnet=https://www.googleapis.com/compute/v1/projects/tf-gcp-infra-415001/regions/us-east1/subnetworks/webapp \
-            --instance-template-region=us-east1
+            --tags=${{ secrets.TARGET_TAGS_HTTP }} \
+            --scopes=${{ secrets.SCOPES }} \
+            --service-account=${{ secrets.SERVICE_ACCOUNT }} \
+            --network=${{ secrets.VPC_NETWORK }} \
+            --subnet=${{ secrets.SUBNET }} \
+            --instance-template-region=${{ secrets.REGION }}
            
-      - name: Start rolling update for Managed Instance Group
+      - name: Start set and rolling update for Managed Instance Group
         run: |    
          RANDOM_ID=$(echo ${{ steps.generate_random_id.outputs.random_id }})
          TEMPLATE_NAME="webapp-instance-template-${RANDOM_ID}"   
-         gcloud compute instance-groups managed set-instance-template webapp-instance-group-manager --template=projects/tf-gcp-infra-415001/regions/us-east1/instanceTemplates/$TEMPLATE_NAME --region=us-east1
+         gcloud compute instance-groups managed set-instance-template webapp-instance-group-manager --template=projects/${{ secrets.GCP_PROJECT_ID }}/regions/${{ secrets.REGION }}/instanceTemplates/$TEMPLATE_NAME --region=us-east1
 
-         gcloud compute instance-groups managed rolling-action start-update webapp-instance-group-manager --version="template=projects/tf-gcp-infra-415001/regions/us-east1/instanceTemplates/$TEMPLATE_NAME" --region=us-east1   
+         gcloud compute instance-groups managed rolling-action start-update webapp-instance-group-manager --version="template=projects/${{ secrets.GCP_PROJECT_ID }}/regions/${{ secrets.REGION }}/instanceTemplates/$TEMPLATE_NAME" --region=${{ secrets.REGION }}   
 
 
       - name: Wait for Managed Instance Group refresh to complete
