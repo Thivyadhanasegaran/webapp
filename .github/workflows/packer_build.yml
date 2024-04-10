@@ -182,7 +182,7 @@ jobs:
           gcloud compute instance-templates create $TEMPLATE_NAME \
           --machine-type=e2-medium \
           --region=us-east1 \
-          --create-disk=image=projects/tf-gcp-infra-415001/global/images/$IMAGE_ID,boot=yes,auto-delete=yes,device-name=persistent-disk-0,size=100,type=pd-balanced,kms-key=projects/tf-gcp-infra-415001/locations/us-east1/keyRings/web-key-ring2/cryptoKeys/vm-cmek-key \
+          --create-disk=image=projects/tf-gcp-infra-415001/global/images/${IMAGE_ID},boot=yes,auto-delete=yes,device-name=persistent-disk-0,size=100,type=pd-balanced,kms-key=projects/tf-gcp-infra-415001/locations/us-east1/keyRings/web-key-ring2/cryptoKeys/vm-cmek-key \
           --metadata=startup-script='#!/bin/bash
                     ENV_FILE="/opt/webapp/.env"
                     if [ ! -f "$ENV_FILE" ]; then
