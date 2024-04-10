@@ -102,40 +102,18 @@ jobs:
 
       # - name: Build custom image
       #   run:  packer build -var 'project_id=${{ secrets.GCP_PROJECT_ID }}'  packer-config/custom_image.pkr.hcl
-
-      # - name: Get Latest Image ID
-      #   id: get_latest_image_id
-      #   run: |
-      #       IMAGE_ID=$(gcloud compute images list --filter="name=^custom-image-*" --sort-by="creationTimestamp desc" --format="value(ID)" | head -n 1)
-      #       echo "Latest Image ID: $IMAGE_ID" 
-      #       echo "::set-output name=image_id::$IMAGE_ID"
-     
-
-      # - name: Get Latest Image ID
-      #   id: get_latest_image_id
-      #   run: |
-      #         IMAGE_ID=$(gcloud compute images list --no-standard-images --format="table(NAME,CREATION_TIMESTAMP)" --sort-by="CREATION_TIMESTAMP" | tail -n 1)
-      #         echo "Latest Image ID: $IMAGE_ID" 
-            
+ 
       - name: Generate Random ID
         id: generate_random_id
         run: |
             RANDOM_ID=$(date +%s | md5sum | head -c 6)
             echo "::set-output name=random_id::$RANDOM_ID"
 
-
-          # IMAGE_ID=${{ steps.get_latest_image_id.outputs.image_id }}
-          # IMAGE_NAME="projects/tf-gcp-infra-415001/global/images/${IMAGE_ID}"
-          # echo "Random ID: $RANDOM_ID"
-          # echo "Image ID: ${IMAGE_NAME}"
-
       - name: Create new Instance Template version
         run: |
             RANDOM_ID=$(echo ${{ steps.generate_random_id.outputs.random_id }})
             TEMPLATE_NAME="webapp-instance-template-${RANDOM_ID}"
-           
             IMAGE_ID=$(gcloud compute images list --no-standard-images --format="table(NAME,CREATION_TIMESTAMP)" --sort-by="CREATION_TIMESTAMP" | tail -n 1)
-            echo "Latest Image ID: $IMAGE_ID"
             IMAGE_NAME="projects/tf-gcp-infra-415001/global/images/${IMAGE_ID}"
 
             gcloud compute instance-templates create $TEMPLATE_NAME \
@@ -166,8 +144,10 @@ jobs:
       - name: Start rolling update for Managed Instance Group
         run: |    
          RANDOM_ID=$(echo ${{ steps.generate_random_id.outputs.random_id }})
-         TEMPLATE_NAME="webapp-instance-template-${RANDOM_ID}"      
-         gcloud compute instance-groups managed rolling-action start-update webapp-instance-group-manager --version=template=$TEMPLATE_NAME --region=${{ secrets.REGION }}
+         TEMPLATE_NAME="webapp-instance-template-${RANDOM_ID}"   
+         gcloud compute instance-groups managed set-instance-template webapp-instance-group-manager --template=projects/tf-gcp-infra-415001/regions/us-east1/instanceTemplates/webapp-instance-template-851d65 --region=us-east1
+
+         gcloud compute instance-groups managed rolling-action start-update webapp-instance-group-manager --version='template=projects/tf-gcp-infra-415001/regions/us-east1/instanceTemplates/webapp-instance-template-851d65' --region=us-east1   
 
 
       - name: Wait for Managed Instance Group refresh to complete
