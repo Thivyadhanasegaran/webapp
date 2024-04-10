@@ -70,7 +70,7 @@ The workflow consists of the following steps:
 
 • Install MySQL: Starts the MySQL service.
 • Configure MySQL: Sets up the MySQL database by creating a database, user, and granting necessary privileges.
-• Use Node.js: Sets up Node.js environment 
+• Use Node.js: Sets up Node.js environment.
 • Set up environment variables: Sets up environment variables required for the application to connect to the MySQL database.
 • Install Dependencies: Installs the project dependencies using npm.
 • Start the application: Starts the application by running "npm start".
