@@ -83,25 +83,25 @@ jobs:
         run: |
             zip -r webapp.zip ./
 
-      # - name: Install Packer
-      #   run: |
-      #     curl -fsSL https://releases.hashicorp.com/packer/1.7.5/packer_1.7.5_linux_amd64.zip -o packer.zip
-      #     unzip packer.zip -d /tmp
-      #     sudo mv /tmp/packer /usr/bin/packer
-      #     packer --version
+      - name: Install Packer
+        run: |
+          curl -fsSL https://releases.hashicorp.com/packer/1.7.5/packer_1.7.5_linux_amd64.zip -o packer.zip
+          unzip packer.zip -d /tmp
+          sudo mv /tmp/packer /usr/bin/packer
+          packer --version
 
-      # - name: Initialize Packer
-      #   run: packer init packer-config/custom_image.pkr.hcl
+      - name: Initialize Packer
+        run: packer init packer-config/custom_image.pkr.hcl
 
-      # - name: Format Packer template
-      #   run: packer fmt -check packer-config/custom_image.pkr.hcl
+      - name: Format Packer template
+        run: packer fmt -check packer-config/custom_image.pkr.hcl
 
-      # - name: Validate Packer template
-      #   run: packer validate -var 'project_id=${{ secrets.GCP_PROJECT_ID }}' packer-config/custom_image.pkr.hcl
+      - name: Validate Packer template
+        run: packer validate -var 'project_id=${{ secrets.GCP_PROJECT_ID }}' packer-config/custom_image.pkr.hcl
       
 
-      # - name: Build custom image
-      #   run:  packer build -var 'project_id=${{ secrets.GCP_PROJECT_ID }}'  packer-config/custom_image.pkr.hcl
+      - name: Build custom image
+        run:  packer build -var 'project_id=${{ secrets.GCP_PROJECT_ID }}'  packer-config/custom_image.pkr.hcl
  
       - name: Generate Random ID
         id: generate_random_id
@@ -145,9 +145,9 @@ jobs:
         run: |    
          RANDOM_ID=$(echo ${{ steps.generate_random_id.outputs.random_id }})
          TEMPLATE_NAME="webapp-instance-template-${RANDOM_ID}"   
-         gcloud compute instance-groups managed set-instance-template webapp-instance-group-manager --template=projects/tf-gcp-infra-415001/regions/us-east1/instanceTemplates/webapp-instance-template-851d65 --region=us-east1
+         gcloud compute instance-groups managed set-instance-template webapp-instance-group-manager --template=projects/tf-gcp-infra-415001/regions/us-east1/instanceTemplates/$TEMPLATE_NAME --region=us-east1
 
-         gcloud compute instance-groups managed rolling-action start-update webapp-instance-group-manager --version='template=projects/tf-gcp-infra-415001/regions/us-east1/instanceTemplates/webapp-instance-template-851d65' --region=us-east1   
+         gcloud compute instance-groups managed rolling-action start-update webapp-instance-group-manager --version='template=projects/tf-gcp-infra-415001/regions/us-east1/instanceTemplates/$TEMPLATE_NAME' --region=us-east1   
 
 
       - name: Wait for Managed Instance Group refresh to complete
