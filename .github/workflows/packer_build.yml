@@ -114,11 +114,9 @@ jobs:
       - name: Get Latest Image ID
         id: get_latest_image_id
         run: |
-              IMAGE_ID=$(gcloud compute images list --filter="name=^custom-image-*" --format="value(NAME)" --sort-by="~creationTimestamp" | head -n 1)
-              echo "Latest Image ID: $IMAGE_ID" 
-              echo "::set-output name=image_id::$IMAGE_ID"
+              IMAGE_ID=$(gcloud compute images list --no-standard-images --format="table(NAME,CREATION_TIMESTAMP)" --sort-by="CREATION_TIMESTAMP" | tail -n 1)
+             
             
-
       - name: Generate Random ID
         id: generate_random_id
         run: |
@@ -179,11 +177,12 @@ jobs:
           RANDOM_ID=$(echo ${{ steps.generate_random_id.outputs.random_id }})
           TEMPLATE_NAME="webapp-instance-template-${RANDOM_ID}"
           IMAGE_ID=$(echo ${{ steps.get_latest_image_id.outputs.image_id }})
-          echo "Latest Image Name: $IMAGE_ID"
+         
+          
           gcloud compute instance-templates create $TEMPLATE_NAME \
           --machine-type=e2-medium \
           --region=us-east1 \
-          --create-disk=image=$IMAGE_ID,boot=yes,auto-delete=yes,device-name=persistent-disk-0,size=100,type=pd-balanced,kms-key=projects/tf-gcp-infra-415001/locations/us-east1/keyRings/web-key-ring2/cryptoKeys/vm-cmek-key \
+          --create-disk=image=projects/${{ secrets.GCP_PROJECT_ID }}/global/images/$IMAGE_ID,boot=yes,auto-delete=yes,device-name=persistent-disk-0,size=100,type=pd-balanced,kms-key=projects/tf-gcp-infra-415001/locations/us-east1/keyRings/web-key-ring2/cryptoKeys/vm-cmek-key \
           --metadata=startup-script='#!/bin/bash
                     ENV_FILE="/opt/webapp/.env"
                     if [ ! -f "$ENV_FILE" ]; then
