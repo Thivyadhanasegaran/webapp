@@ -159,7 +159,7 @@ Payload and Query Parameters Middleware: Validates payload and query parameters 
 Response:
 200 OK: If the email is successfully verified.
 400 Bad Request: If the email verification link is invalid or has expired.
-500 Internal Server Error: If there is an internal server error during the verification process.
+500 Internal Server Error: If there is an internal server error during the verification process
 
 ## Assignment 09:
 References:
