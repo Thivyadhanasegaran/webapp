@@ -2,14 +2,14 @@ name: Workflow CI
  
 on:
   pull_request:
-    # types: [closed]
+    types: [closed]
     branches:
       - main
 
 jobs:
   build:
     name: test-build
-    # if: github.event.pull_request.merged == true
+    if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
          
     strategy:
@@ -160,19 +160,3 @@ jobs:
 
 
 
-
-
-
-
-
-
-
-      # - name: Wait for Managed Instance Group refresh to complete
-      #   run: |
-      #     while true; do
-      #       status=$(gcloud compute instance-groups managed describe webapp_instance_group_manager --zone=us-east1 --format=json | jq -r '.versionTarget.isReached')
-      #       if [ "$status" = "true" ]; then
-      #         break
-      #       fi
-      #       sleep 10
-      #     done
