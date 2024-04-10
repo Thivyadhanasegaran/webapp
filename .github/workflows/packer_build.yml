@@ -2,14 +2,14 @@ name: Workflow CI
  
 on:
   pull_request:
-    types: [closed]
+    # types: [closed]
     branches:
       - main
 
 jobs:
   build:
     name: test-build
-    if: github.event.pull_request.merged == true
+    # if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
          
     strategy:
@@ -110,11 +110,16 @@ jobs:
             echo "::set-output name=random_id::$RANDOM_ID"
 
 
+          # IMAGE_ID=$(gcloud compute images list --no-standard-images --format="table(NAME,CREATION_TIMESTAMP)" --sort-by="CREATION_TIMESTAMP" | tail -n 1)
+
+     
+
       - name: Create new Instance Template version
         run: |
             RANDOM_ID=$(echo ${{ steps.generate_random_id.outputs.random_id }})
             TEMPLATE_NAME="webapp-instance-template-${RANDOM_ID}"
-            IMAGE_ID=$(gcloud compute images list --no-standard-images --format="table(NAME,CREATION_TIMESTAMP)" --sort-by="CREATION_TIMESTAMP" | tail -n 1)
+            IMAGE_ID=$(jq -r '.builds[-1].artifact_id' manifest.json)
+
             IMAGE_NAME="projects/${{ secrets.GCP_PROJECT_ID }}/global/images/${IMAGE_ID}"
             gcloud compute instance-templates create $TEMPLATE_NAME \
             --machine-type=${{ secrets.MACHINE_TYPE }} \
