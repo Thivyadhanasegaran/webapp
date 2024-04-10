@@ -135,7 +135,7 @@ Ops Agent Configuration:
 Whenever a new user account is created, the web application publishes a message to a Pub/Sub topic. This message contains relevant information in JSON format that will be utilized by a Cloud Function to send an email to the user and track the link verification process.
 • The payload (message) published to the Pub/Sub topic includes information as 
 Username: The username of the newly created user.
-• All API calls from user accounts that have not been verified are now blocked until the user completes the email verification process. (GET/UPDATE api request)
+• All API calls from user accounts that have not been verified are now blocked until the user completes the email verification process. (GET/UPDATE api request).
 
 • Email Verification Process
 The email verification process involves the following steps:
