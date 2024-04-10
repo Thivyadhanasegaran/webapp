@@ -98,9 +98,11 @@ build {
       "sudo systemctl restart google-cloud-ops-agent",
     ]
   }
-  post-processor "manifest" {
-  output     = "manifest.json"
-  strip_path = true
+  post-processors {
+    post-processor "manifest" {
+      output     = "manifest.json"
+      strip_path = true
+    }
   }
 }
 
