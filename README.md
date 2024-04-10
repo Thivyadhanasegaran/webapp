@@ -161,3 +161,10 @@ Response:
 400 Bad Request: If the email verification link is invalid or has expired.
 500 Internal Server Error: If there is an internal server error during the verification process.
 
+## Assignment 09:
+References:
+https://cloud.google.com/sdk/gcloud/reference/compute/instance-templates/create
+ 
+https://cloud.google.com/sdk/gcloud/reference/compute/instance-groups/managed/rolling-action/start-update
+ 
+https://cloud.google.com/sdk/gcloud/reference/compute/instance-groups/managed/wait-until

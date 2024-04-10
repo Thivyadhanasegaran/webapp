@@ -109,11 +109,14 @@ jobs:
             RANDOM_ID=$(date +%s | md5sum | head -c 6)
             echo "::set-output name=random_id::$RANDOM_ID"
 
+        # IMAGE_ID=$(gcloud compute images list --no-standard-images --format="table(NAME,CREATION_TIMESTAMP)" --sort-by="CREATION_TIMESTAMP" | tail -n 1)
+
       - name: Create new Instance Template version
         run: |
             RANDOM_ID=$(echo ${{ steps.generate_random_id.outputs.random_id }})
             TEMPLATE_NAME="webapp-instance-template-${RANDOM_ID}"
-            IMAGE_ID=$(gcloud compute images list --no-standard-images --format="table(NAME,CREATION_TIMESTAMP)" --sort-by="CREATION_TIMESTAMP" | tail -n 1)
+            IMAGE_NAME=$(jq -r '.builds[-1].artifact_id' build.json)
+
             IMAGE_NAME="projects/${{ secrets.GCP_PROJECT_ID }}/global/images/${IMAGE_ID}"
 
             gcloud compute instance-templates create $TEMPLATE_NAME \
