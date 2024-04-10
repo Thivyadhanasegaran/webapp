@@ -100,8 +100,8 @@ jobs:
         run: packer validate -var 'project_id=${{ secrets.GCP_PROJECT_ID }}' packer-config/custom_image.pkr.hcl
       
 
-      - name: Build custom image
-        run:  packer build -var 'project_id=${{ secrets.GCP_PROJECT_ID }}'  packer-config/custom_image.pkr.hcl
+      # - name: Build custom image
+      #   run:  packer build -var 'project_id=${{ secrets.GCP_PROJECT_ID }}'  packer-config/custom_image.pkr.hcl
  
       - name: Generate Random ID
         id: generate_random_id
@@ -115,7 +115,8 @@ jobs:
         run: |
             RANDOM_ID=$(echo ${{ steps.generate_random_id.outputs.random_id }})
             TEMPLATE_NAME="webapp-instance-template-${RANDOM_ID}"
-            IMAGE_NAME=$(jq -r '.builds[-1].artifact_id' build.json)
+            IMAGE_NAME=$(grep 'artifact,0,id' packer-config/custom_image.pkr.hcl | cut -d'=' -f2)
+
 
             IMAGE_NAME="projects/${{ secrets.GCP_PROJECT_ID }}/global/images/${IMAGE_ID}"
 

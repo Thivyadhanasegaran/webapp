@@ -162,9 +162,58 @@ Response:
 500 Internal Server Error: If there is an internal server error during the verification process
 
 ## Assignment 09:
+
+Continuous Deployment with GitHub Actions:
+
+This repository contains the GitHub Actions workflow for automating the deployment of my web application on Google Cloud Platform (GCP).
+
+Workflow Overview as part of this assignment:
+
+The GitHub Actions workflow automates the following steps:
+
+1. Generate Random ID: This step generates a random ID to be used for naming the new instance template.
+
+2. Create New Instance Template Version:
+    - This step creates a new version of the instance template with the latest machine image ID for the managed instance group.
+    - It uses Packer to build a custom image and extracts the image ID from the build output.
+    - The image ID is then used to create the new instance template.
+
+3. Start Set and Rolling Update for Managed Instance Group:
+    - This step starts a rolling update for the managed instance group using the new instance template.
+    - It sets the maximum number of instances that can be unavailable during the update.
+
+4. Wait for Managed Instance Group Refresh to Complete:
+    - This step waits for the managed instance group to reach the target version.
+    - It ensures that the GitHub Actions workflow waits until the update process is completed.
+
+Secrets:
+
+This workflow utilizes the following secrets stored in GitHub Actions:
+- 'GCP_PROJECT_ID': Google Cloud Platform project ID.
+- 'MACHINE_TYPE': Machine type for the new instance template.
+- 'REGION': Region where the new instance template and managed instance group reside.
+- 'DEVICE_NAME': Name of the device for the disk in the new instance template.
+- 'DISK_SIZE': Size of the disk for the new instance template.
+- 'DISK_TYPE': Type of the disk for the new instance template.
+- 'KEY_NAME': Name of the key for encrypting the disk.
+- 'VM_KMS_KEYNAME': Name of the KMS key for encrypting the disk.
+- 'TARGET_TAGS_HTTP': Target tags for network traffic.
+- 'SCOPES': Scopes for the instance.
+- 'SERVICE_ACCOUNT': Service account to be used by the instance.
+- 'VPC_NETWORK': VPC network for the instance.
+- 'SUBNET': Subnet for the instance.
+- 'GROUP_MANAGER_NAME': Name of the managed instance group.
+
+
+Monitoring Updates:
+
+The workflow ensures that the GitHub Actions workflow waits until the managed instance group refresh is complete.
+
 References:
 https://cloud.google.com/sdk/gcloud/reference/compute/instance-templates/create
  
 https://cloud.google.com/sdk/gcloud/reference/compute/instance-groups/managed/rolling-action/start-update
  
 https://cloud.google.com/sdk/gcloud/reference/compute/instance-groups/managed/wait-until
+
+https://cloud.google.com/compute/docs/instance-groups/rolling-out-updates
