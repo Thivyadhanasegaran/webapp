@@ -6,7 +6,7 @@ axios.defaults.baseURL = "http://localhost:8080";
 describe("Endpoint Integration Tests", () => {
   it("Create a user account and verify its existence using a GET request", async () => {
     // POST request to create a new user
-    const userCreationResponse = await axios.post("/v1/user", {
+    const userCreationResponse = await axios.post("/v2/user", {
       first_name: "user",last_name: "user",username: "user@gmail.com",password: "user01",
     });
     expect(userCreationResponse.status).to.equal(201);
@@ -14,7 +14,7 @@ describe("Endpoint Integration Tests", () => {
     // Authenticate the user
     const authHeader = `Basic ${Buffer.from("user@gmail.com:user01").toString("base64")}`;
     // Send a GET request to verify the existence of the user account
-    const getUserResponse = await axios.get("/v1/user/self", {
+    const getUserResponse = await axios.get("/v2/user/self", {
       headers: {
         Authorization: authHeader,
       },
@@ -27,7 +27,7 @@ describe("Endpoint Integration Tests", () => {
     // Authenticate
     const authHeader = `Basic ${Buffer.from("user@gmail.com:user01").toString("base64")}`;
     // Send a PUT request
-    const updateUserResponse = await axios.put("/v1/user/self", {
+    const updateUserResponse = await axios.put("/v2/user/self", {
       first_name: 'usernew',last_name: 'usernew',password: 'user01'
     }, {
       headers: {
@@ -36,7 +36,7 @@ describe("Endpoint Integration Tests", () => {
     });
     expect(updateUserResponse.status).to.equal(204);
     // Send a GET request
-    const getUserResponse = await axios.get("/v1/user/self", {
+    const getUserResponse = await axios.get("/v2/user/self", {
       headers: {
         Authorization: authHeader,
       },

@@ -93,8 +93,8 @@ app.get("/verify-email", verifyEmail);
 // Middleware to handle invalid methods for non-existent endpoints
 
 const allowedEndpoints = {
-  '/v1/user': ['POST'],
-  '/v1/user/self': ['GET', 'PUT']
+  '/v2/user': ['POST'],
+  '/v2/user/self': ['GET', 'PUT']
 };
 
 app.use((req, res, next) => {

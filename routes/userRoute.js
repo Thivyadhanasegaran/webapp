@@ -14,14 +14,14 @@ const router = express.Router();
 
 // Route to handle new user
 router
-  .post("/v1/user", createUser, checkDBConnection, createUserPost);
+  .post("/v2/user", createUser, checkDBConnection, createUserPost);
 
 // Route to get user information
-router.get("/v1/user/self", checkPayloadAndQueryParams, checkDBConnection, basicAuth, getUserInfo);
+router.get("/v2/user/self", checkPayloadAndQueryParams, checkDBConnection, basicAuth, getUserInfo);
 
 // Route to update user information
 
 router
-  .put("/v1/user/self", updateUserCheck , checkDBConnection, basicAuth, updateUser);
+  .put("/v2/user/self", updateUserCheck , checkDBConnection, basicAuth, updateUser);
 
 export default router;
