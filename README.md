@@ -217,3 +217,6 @@ https://cloud.google.com/sdk/gcloud/reference/compute/instance-groups/managed/ro
 https://cloud.google.com/sdk/gcloud/reference/compute/instance-groups/managed/wait-until
 
 https://cloud.google.com/compute/docs/instance-groups/rolling-out-updates
+
+
+![Screenshot](images/Complete_workflow.png)
